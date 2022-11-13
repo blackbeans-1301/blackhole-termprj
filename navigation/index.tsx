@@ -3,105 +3,157 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { FontAwesome, EvilIcons, MaterialIcons } from "@expo/vector-icons"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { LinearGradient } from "expo-linear-gradient"
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import * as React from "react"
+import { Button, ColorSchemeName, Pressable } from "react-native"
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import ModalScreen from '../screens/ModalScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
-import LinkingConfiguration from './LinkingConfiguration';
+import Colors from "../constants/Colors"
+import useColorScheme from "../hooks/useColorScheme"
+import ModalScreen from "../screens/ModalScreen"
+import NotFoundScreen from "../screens/NotFoundScreen"
+import HomeScreen from "../screens/home/HomeScreen"
+import HomeNavigator from "./HomeNavigator"
+import SearchScreen from "../screens/search/SearchScreen"
+import LibScreen from "../screens/libraries/LibScreen"
+import SettingScreen from "../screens/settings/SettingScreen"
+import {
+  RootStackParamList,
+  RootTabParamList,
+  RootTabScreenProps,
+} from "../types"
+import LinkingConfiguration from "./LinkingConfiguration"
+import constants from "../constants"
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Navigation({
+  colorScheme,
+}: {
+  colorScheme: ColorSchemeName
+}) {
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer linking={LinkingConfiguration} theme={DarkTheme}>
       <RootNavigator />
     </NavigationContainer>
-  );
+  )
 }
 
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>()
 
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+      <Stack.Screen
+        name="Root"
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{ title: "Oops!" }}
+      />
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
-  );
+  )
 }
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
+const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme()
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      // tabBar={(props) => {
+      //   return (
+      //     <LinearGradient
+      //       colors={["#f5f5f5", "#DBDBDB"]}
+      //       start={[1, 0]}
+      //       end={[0, 0]}
+      //     ></LinearGradient>
+      //   )
+      // }}
+      initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
+        tabBarActiveTintColor: constants.colors.tabBarActiveColor,
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: "#000",
+          borderTopWidth: 0,
+        },
+      }}
+      sceneContainerStyle={{
+        backgroundColor: "transparent",
+      }}
+    >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
+        name="Home"
+        component={HomeNavigator}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+        }}
+      />
+
+      <BottomTab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: "Search",
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Library"
+        component={LibScreen}
+        options={{
+          title: "Your Library",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="library-music" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Settings"
+        component={SettingScreen}
+        options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
+          title: "Setting",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="settings" color={color} />
           ),
         })}
       />
-      <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
     </BottomTab.Navigator>
-  );
+  )
+}
+
+function BottomTabBar({ navigation }) {
+  return <></>
 }
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
+  name: React.ComponentProps<typeof MaterialIcons>["name"]
+  color: string
 }) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <MaterialIcons size={26} style={{ marginBottom: -3 }} {...props} />
 }
