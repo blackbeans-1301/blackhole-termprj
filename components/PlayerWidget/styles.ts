@@ -4,11 +4,11 @@ import constants from "../../constants"
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
-    height: 60,
-    position: "absolute",
-    bottom: 60,
+    height: "100%",
+    bottom: 0,
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    elevation: 1,
   },
   container: {
     flexDirection: "row",
@@ -53,7 +53,12 @@ const styles = StyleSheet.create({
   controllerRight: {
     flexDirection: "row",
     alignItems: "center"
-  }
+  },
+
+  elevation: {
+    elevation: 20,
+    shadowColor: "#000",
+  },
 })
 
 export default styles

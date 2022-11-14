@@ -32,13 +32,19 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration"
 import constants from "../constants"
 
+import { navigationRef } from "../RootNavigation"
+
 export default function Navigation({
   colorScheme,
 }: {
   colorScheme: ColorSchemeName
 }) {
   return (
-    <NavigationContainer linking={LinkingConfiguration} theme={DarkTheme}>
+    <NavigationContainer
+      linking={LinkingConfiguration}
+      theme={DarkTheme}
+      ref={navigationRef}
+    >
       <RootNavigator />
     </NavigationContainer>
   )

@@ -60,6 +60,7 @@ export default function AlbumScreen() {
         renderItem={({ item }) => <SongListItem song={item} />}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={() => <AlbumHeader album={albumDetails} />}
+        ListFooterComponent={() => <View style={{ height: 80 }}></View>}
       />
     </View>
   )
@@ -67,7 +68,7 @@ export default function AlbumScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   title: {
     color: "white",
