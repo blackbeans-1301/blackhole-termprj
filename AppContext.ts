@@ -8,6 +8,10 @@ const context = {
   songsOfAlbum: [],
   setSongsOfAlbum: (songsId: string[]) => {
 
+  },
+  hasUser: '',
+  setUser: (userId: string) => {
+
   }
 }
 

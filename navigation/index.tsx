@@ -87,15 +87,6 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      // tabBar={(props) => {
-      //   return (
-      //     <LinearGradient
-      //       colors={["#f5f5f5", "#DBDBDB"]}
-      //       start={[1, 0]}
-      //       end={[0, 0]}
-      //     ></LinearGradient>
-      //   )
-      // }}
       initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: constants.colors.tabBarActiveColor,
@@ -139,12 +130,11 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="Settings"
         component={SettingScreen}
-        options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
-          title: "Setting",
+        options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="settings" color={color} />
           ),
-        })}
+        }}
       />
     </BottomTab.Navigator>
   )

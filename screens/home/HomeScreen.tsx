@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native"
 import AlbumCategory from "../../components/AlbumCategory"
-import albumCategories from "../../data/albumCategories"
 import { API, graphqlOperation } from "aws-amplify"
 import { listAlbumCategories } from "../../src/graphql/queries"
 import { SafeAreaProvider } from "react-native-safe-area-context"

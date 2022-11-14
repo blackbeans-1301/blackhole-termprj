@@ -88,7 +88,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
             runOnJS(setId)(null)
           }
         )
-        translateX.value = 0
+        translateX.value = withTiming(0)
 
         // setDuration(0)
         // setPosition(null)
@@ -442,12 +442,12 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
         <View style={stylesForFullScreen.controller}>
           <TouchableOpacity
             onPress={() => {
-              setMixed(true)
+              setMixed(!isMixed)
             }}
           >
-            <Fontisto
-              name="arrow-swap"
-              size={20}
+            <MaterialCommunityIcons
+              name="shuffle"
+              size={24}
               color={isMixed ? "white" : "#636363"}
             />
           </TouchableOpacity>

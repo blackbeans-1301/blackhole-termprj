@@ -219,6 +219,27 @@ export const listSongs = /* GraphQL */ `
     }
   }
 `
+
+export const listSongsForSearch = /* GraphQL */ `
+  query ListSongs(
+    $filter: ModelSongFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSongs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        imageUri
+        title
+        artist {
+          name
+        }
+      }
+      nextToken
+    }
+  }
+`
+
 export const getArtist = /* GraphQL */ `
   query GetArtist($id: ID!) {
     getArtist(id: $id) {
@@ -322,19 +343,14 @@ export const getPlayList = /* GraphQL */ `
           imageUri
           title
           songUri
-          lyrics
-          createdAt
-          updatedAt
-          albumSongsId
-          artistSongsId
-          playListSongsId
+          artist {
+            name
+            id
+          }
         }
         nextToken
       }
       imageUri
-      createdAt
-      updatedAt
-      userPlayListsId
     }
   }
 `
@@ -348,9 +364,6 @@ export const listPlayLists = /* GraphQL */ `
       items {
         id
         title
-        songs {
-          nextToken
-        }
         imageUri
         createdAt
         updatedAt
