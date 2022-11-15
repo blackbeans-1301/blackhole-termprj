@@ -10,48 +10,48 @@ import { NavigationContainer } from "@react-navigation/native"
 
 import { Amplify, Auth, auth0SignInButton } from "aws-amplify"
 import config from "./src/aws-exports"
+import AuthenticationScreen from "./screens/home/AuthenticationScreen"
 
 import { AppContext } from "./AppContext"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 
-import { withAuthenticator, AmplifyTheme } from "aws-amplify-react-native"
-import AuthenticationScreen from "./screens/home/AuthenticationScreen"
 import SignUpScreen from "./screens/home/SignUpScreen"
 
 Amplify.configure(config)
 
 const Stack = createNativeStackNavigator()
 
-// function App() {
-//   const { hasUser } = useContext(AppContext)
-//   return (
-//     <SafeAreaProvider>
-//       <NavigationContainer>
-//         <Stack.Navigator
-//           initialRouteName={hasUser !== "" ? "login" : "AppScreen"}
-//         >
-//           <Stack.Screen
-//             name="login"
-//             component={AuthenticationScreen}
-//             options={{ headerShown: false }}
-//           />
-//           <Stack.Screen
-//             name="signUp"
-//             component={SignUpScreen}
-//             options={{ headerShown: false }}
-//           />
-//           <Stack.Screen
-//             name="AppScreen"
-//             component={AppWithAuthentication}
-//             options={{ headerShown: false }}
-//           />
-//         </Stack.Navigator>
-//       </NavigationContainer>
-//     </SafeAreaProvider>
-//   )
-// }
-
 function App() {
+  const { hasUser } = useContext(AppContext)
+  console.log(hasUser)
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName={hasUser === "" ? "SignInScreen" : "AppScreen"}
+        >
+          <Stack.Screen
+            name="SignInScreen"
+            component={AuthenticationScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUpScreen"
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AppScreen"
+            component={AppWithAuthentication}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  )
+}
+
+function AppWithAuthentication() {
   // Auth.signOut()
   const isLoadingComplete = useCachedResources()
   const colorScheme = useColorScheme()
@@ -123,6 +123,4 @@ const signUpConfig = {
   ],
 }
 
-const customTheme = { ...AmplifyTheme }
-
-export default withAuthenticator(App, { signUpConfig, theme: customTheme })
+export default App

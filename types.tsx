@@ -32,6 +32,8 @@ export type RootTabParamList = {
   Library: undefined
   Search: undefined
   Settings: undefined
+  AlbumScreen: undefined
+  SignUpScreen: undefined
 }
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =

@@ -104,7 +104,7 @@ export default function SignUpScreen() {
           >
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("login")
+                navigation.navigate("SignInScreen")
               }}
             >
               <Text style={{ color: "#ccc", fontSize: 16 }}>Login?</Text>

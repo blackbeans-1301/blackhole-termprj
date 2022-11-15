@@ -33,6 +33,7 @@ import LinkingConfiguration from "./LinkingConfiguration"
 import constants from "../constants"
 
 import { navigationRef } from "../RootNavigation"
+import PlayListNavigator from "./PlayListNavigator"
 
 export default function Navigation({
   colorScheme,
@@ -41,6 +42,7 @@ export default function Navigation({
 }) {
   return (
     <NavigationContainer
+      independent={true}
       linking={LinkingConfiguration}
       theme={DarkTheme}
       ref={navigationRef}
@@ -119,7 +121,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Library"
-        component={LibScreen}
+        component={PlayListNavigator}
         options={{
           title: "Your Library",
           tabBarIcon: ({ color }) => (

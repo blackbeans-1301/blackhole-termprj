@@ -8,21 +8,42 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native"
 import AlbumCategory from "../../components/AlbumCategory"
-import { API, graphqlOperation } from "aws-amplify"
+import { API, Auth, graphqlOperation } from "aws-amplify"
 import { listAlbumCategories } from "../../src/graphql/queries"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { useNavigation } from "@react-navigation/native"
+import constants from "../../constants"
 
 export default function AuthenticationScreen() {
   const [userName, setUserName] = useState("")
   const [passWord, setPassWord] = useState("")
   const navigation = useNavigation()
 
-  const signUpPressed = () => {
+  const [correctInput, setCorrectInput] = useState(true)
+  const [correctInformation, setCorrectInformation] = useState(true)
+  const [isSigningIn, setSingingIn] = useState(false)
+
+  const goToSignUp = () => {
     console.log("signup")
-    navigation.navigate("signUp")
+    navigation.navigate("SignUpScreen")
+  }
+
+  const onSignInPressed = async () => {
+    if (userName === "" || passWord === "") {
+      setCorrectInput(false)
+      return
+    }
+    setCorrectInput(true)
+    try {
+      const response = await Auth.signIn(userName, passWord)
+      console.log(response)
+    } catch (e) {
+      console.log(e)
+      setCorrectInformation(false)
+    }
   }
 
   return (
@@ -41,6 +62,7 @@ export default function AuthenticationScreen() {
           {/* input for user name */}
           <View style={styles.userNameInput}>
             <TextInput
+              style={styles.inputStyle}
               placeholder="Username"
               placeholderTextColor={"#ccc"}
               onChangeText={(event) => {
@@ -52,29 +74,49 @@ export default function AuthenticationScreen() {
           {/* input for pw */}
           <View style={styles.passwordInput}>
             <TextInput
+              style={styles.inputStyle}
               placeholder="Password"
               placeholderTextColor={"#ccc"}
               onChangeText={(event) => {
                 setPassWord(event)
               }}
+              secureTextEntry={true}
             ></TextInput>
+          </View>
+          <View style={{ height: 25 }}>
+            {!correctInput && (
+              <Text style={styles.incorrectInfo}>
+                Incorrect Information, please fill up the form!
+              </Text>
+            )}
+            {!correctInformation && (
+              <Text style={styles.incorrectInfo}>
+                Incorrect username or password!
+              </Text>
+            )}
           </View>
 
           {/* for signin button */}
-          <View style={styles.signInButton}>
-            <Text
-              style={{
-                color: "white",
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              Sign In
-            </Text>
-          </View>
+          <TouchableOpacity onPress={onSignInPressed}>
+            <View style={styles.signInButton}>
+              {isSigningIn ? (
+                <ActivityIndicator></ActivityIndicator>
+              ) : (
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sign In
+                </Text>
+              )}
+            </View>
+          </TouchableOpacity>
 
           {/* for sign up */}
-          <TouchableOpacity onPress={signUpPressed}>
+          <TouchableOpacity onPress={goToSignUp}>
             <View
               style={{
                 width: "100%",
@@ -146,5 +188,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
+  },
+  inputStyle: {
+    color: constants.colors.tabBarActiveColor,
+    fontWeight: "700",
+    fontSize: 16,
+  },
+  incorrectInfo: {
+    color: "red",
+    fontSize: 14,
+    textAlign: "center",
+    height: 35,
+    paddingTop: 10,
   },
 })
