@@ -2,6 +2,114 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateSongCategory = /* GraphQL */ `
+  subscription OnCreateSongCategory(
+    $filter: ModelSubscriptionSongCategoryFilterInput
+  ) {
+    onCreateSongCategory(filter: $filter) {
+      id
+      name
+      songs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      imageUri
+      createdAt
+      updatedAt
+      albumIncludedSongCategoriesId
+      userFavoriteCategoriesId
+    }
+  }
+`;
+export const onUpdateSongCategory = /* GraphQL */ `
+  subscription OnUpdateSongCategory(
+    $filter: ModelSubscriptionSongCategoryFilterInput
+  ) {
+    onUpdateSongCategory(filter: $filter) {
+      id
+      name
+      songs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      imageUri
+      createdAt
+      updatedAt
+      albumIncludedSongCategoriesId
+      userFavoriteCategoriesId
+    }
+  }
+`;
+export const onDeleteSongCategory = /* GraphQL */ `
+  subscription OnDeleteSongCategory(
+    $filter: ModelSubscriptionSongCategoryFilterInput
+  ) {
+    onDeleteSongCategory(filter: $filter) {
+      id
+      name
+      songs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      imageUri
+      createdAt
+      updatedAt
+      albumIncludedSongCategoriesId
+      userFavoriteCategoriesId
+    }
+  }
+`;
 export const onCreateAlbumCategory = /* GraphQL */ `
   subscription OnCreateAlbumCategory(
     $filter: ModelSubscriptionAlbumCategoryFilterInput
@@ -21,6 +129,8 @@ export const onCreateAlbumCategory = /* GraphQL */ `
           updatedAt
           albumCategoryAlbumsId
           songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
         }
         nextToken
       }
@@ -49,6 +159,8 @@ export const onUpdateAlbumCategory = /* GraphQL */ `
           updatedAt
           albumCategoryAlbumsId
           songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
         }
         nextToken
       }
@@ -77,6 +189,8 @@ export const onDeleteAlbumCategory = /* GraphQL */ `
           updatedAt
           albumCategoryAlbumsId
           songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
         }
         nextToken
       }
@@ -111,12 +225,43 @@ export const onCreateAlbum = /* GraphQL */ `
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      artists {
+        items {
+          id
+          name
+          imageUri
+          description
+          createdAt
+          updatedAt
+          albumArtistsId
+          userFavoriteArtistsId
+        }
+        nextToken
+      }
+      includedSongCategories {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          albumIncludedSongCategoriesId
+          userFavoriteCategoriesId
         }
         nextToken
       }
@@ -124,6 +269,8 @@ export const onCreateAlbum = /* GraphQL */ `
       updatedAt
       albumCategoryAlbumsId
       songAlbumsId
+      artistAlbumsId
+      userFavoriteAlbumsId
     }
   }
 `;
@@ -152,12 +299,43 @@ export const onUpdateAlbum = /* GraphQL */ `
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      artists {
+        items {
+          id
+          name
+          imageUri
+          description
+          createdAt
+          updatedAt
+          albumArtistsId
+          userFavoriteArtistsId
+        }
+        nextToken
+      }
+      includedSongCategories {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          albumIncludedSongCategoriesId
+          userFavoriteCategoriesId
         }
         nextToken
       }
@@ -165,6 +343,8 @@ export const onUpdateAlbum = /* GraphQL */ `
       updatedAt
       albumCategoryAlbumsId
       songAlbumsId
+      artistAlbumsId
+      userFavoriteAlbumsId
     }
   }
 `;
@@ -193,12 +373,43 @@ export const onDeleteAlbum = /* GraphQL */ `
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      artists {
+        items {
+          id
+          name
+          imageUri
+          description
+          createdAt
+          updatedAt
+          albumArtistsId
+          userFavoriteArtistsId
+        }
+        nextToken
+      }
+      includedSongCategories {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          albumIncludedSongCategoriesId
+          userFavoriteCategoriesId
         }
         nextToken
       }
@@ -206,6 +417,8 @@ export const onDeleteAlbum = /* GraphQL */ `
       updatedAt
       albumCategoryAlbumsId
       songAlbumsId
+      artistAlbumsId
+      userFavoriteAlbumsId
     }
   }
 `;
@@ -216,17 +429,48 @@ export const onCreateSong = /* GraphQL */ `
       imageUri
       title
       songUri
+      listened
       lyrics
+      averageScore
+      ratedTime
       artist {
+        id
+        name
+        imageUri
+        description
+        songs {
+          nextToken
+        }
+        albums {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        albumArtistsId
+        userFavoriteArtistsId
+      }
+      category {
         id
         name
         songs {
           nextToken
         }
         imageUri
-        description
         createdAt
         updatedAt
+        albumIncludedSongCategoriesId
+        userFavoriteCategoriesId
+      }
+      country {
+        id
+        name
+        imageUri
+        songs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userFavoriteCountriesId
       }
       albums {
         items {
@@ -240,14 +484,19 @@ export const onCreateSong = /* GraphQL */ `
           updatedAt
           albumCategoryAlbumsId
           songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
         }
         nextToken
       }
       createdAt
       updatedAt
+      songCategorySongsId
       albumSongsId
       artistSongsId
+      userFavoriteSongsId
       playListSongsId
+      countrySongsId
     }
   }
 `;
@@ -258,17 +507,48 @@ export const onUpdateSong = /* GraphQL */ `
       imageUri
       title
       songUri
+      listened
       lyrics
+      averageScore
+      ratedTime
       artist {
+        id
+        name
+        imageUri
+        description
+        songs {
+          nextToken
+        }
+        albums {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        albumArtistsId
+        userFavoriteArtistsId
+      }
+      category {
         id
         name
         songs {
           nextToken
         }
         imageUri
-        description
         createdAt
         updatedAt
+        albumIncludedSongCategoriesId
+        userFavoriteCategoriesId
+      }
+      country {
+        id
+        name
+        imageUri
+        songs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userFavoriteCountriesId
       }
       albums {
         items {
@@ -282,14 +562,19 @@ export const onUpdateSong = /* GraphQL */ `
           updatedAt
           albumCategoryAlbumsId
           songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
         }
         nextToken
       }
       createdAt
       updatedAt
+      songCategorySongsId
       albumSongsId
       artistSongsId
+      userFavoriteSongsId
       playListSongsId
+      countrySongsId
     }
   }
 `;
@@ -300,17 +585,48 @@ export const onDeleteSong = /* GraphQL */ `
       imageUri
       title
       songUri
+      listened
       lyrics
+      averageScore
+      ratedTime
       artist {
+        id
+        name
+        imageUri
+        description
+        songs {
+          nextToken
+        }
+        albums {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        albumArtistsId
+        userFavoriteArtistsId
+      }
+      category {
         id
         name
         songs {
           nextToken
         }
         imageUri
-        description
         createdAt
         updatedAt
+        albumIncludedSongCategoriesId
+        userFavoriteCategoriesId
+      }
+      country {
+        id
+        name
+        imageUri
+        songs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userFavoriteCountriesId
       }
       albums {
         items {
@@ -324,14 +640,19 @@ export const onDeleteSong = /* GraphQL */ `
           updatedAt
           albumCategoryAlbumsId
           songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
         }
         nextToken
       }
       createdAt
       updatedAt
+      songCategorySongsId
       albumSongsId
       artistSongsId
+      userFavoriteSongsId
       playListSongsId
+      countrySongsId
     }
   }
 `;
@@ -340,25 +661,50 @@ export const onCreateArtist = /* GraphQL */ `
     onCreateArtist(filter: $filter) {
       id
       name
+      imageUri
+      description
       songs {
         items {
           id
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
         }
         nextToken
       }
-      imageUri
-      description
+      albums {
+        items {
+          id
+          name
+          creator
+          numberOfLikes
+          imageUri
+          artistHeadline
+          createdAt
+          updatedAt
+          albumCategoryAlbumsId
+          songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
+      albumArtistsId
+      userFavoriteArtistsId
     }
   }
 `;
@@ -367,25 +713,50 @@ export const onUpdateArtist = /* GraphQL */ `
     onUpdateArtist(filter: $filter) {
       id
       name
+      imageUri
+      description
       songs {
         items {
           id
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
         }
         nextToken
       }
-      imageUri
-      description
+      albums {
+        items {
+          id
+          name
+          creator
+          numberOfLikes
+          imageUri
+          artistHeadline
+          createdAt
+          updatedAt
+          albumCategoryAlbumsId
+          songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
+      albumArtistsId
+      userFavoriteArtistsId
     }
   }
 `;
@@ -394,25 +765,50 @@ export const onDeleteArtist = /* GraphQL */ `
     onDeleteArtist(filter: $filter) {
       id
       name
+      imageUri
+      description
       songs {
         items {
           id
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
         }
         nextToken
       }
-      imageUri
-      description
+      albums {
+        items {
+          id
+          name
+          creator
+          numberOfLikes
+          imageUri
+          artistHeadline
+          createdAt
+          updatedAt
+          albumCategoryAlbumsId
+          songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
+      albumArtistsId
+      userFavoriteArtistsId
     }
   }
 `;
@@ -421,6 +817,7 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser(filter: $filter) {
       id
       avatarUri
+      isChosenCategories
       isAdmin
       playLists {
         items {
@@ -430,6 +827,80 @@ export const onCreateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userPlayListsId
+        }
+        nextToken
+      }
+      favoriteCategories {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          albumIncludedSongCategoriesId
+          userFavoriteCategoriesId
+        }
+        nextToken
+      }
+      favoriteSongs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      favoriteAlbums {
+        items {
+          id
+          name
+          creator
+          numberOfLikes
+          imageUri
+          artistHeadline
+          createdAt
+          updatedAt
+          albumCategoryAlbumsId
+          songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
+        }
+        nextToken
+      }
+      favoriteArtists {
+        items {
+          id
+          name
+          imageUri
+          description
+          createdAt
+          updatedAt
+          albumArtistsId
+          userFavoriteArtistsId
+        }
+        nextToken
+      }
+      favoriteCountries {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          userFavoriteCountriesId
         }
         nextToken
       }
@@ -443,6 +914,7 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser(filter: $filter) {
       id
       avatarUri
+      isChosenCategories
       isAdmin
       playLists {
         items {
@@ -452,6 +924,80 @@ export const onUpdateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userPlayListsId
+        }
+        nextToken
+      }
+      favoriteCategories {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          albumIncludedSongCategoriesId
+          userFavoriteCategoriesId
+        }
+        nextToken
+      }
+      favoriteSongs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      favoriteAlbums {
+        items {
+          id
+          name
+          creator
+          numberOfLikes
+          imageUri
+          artistHeadline
+          createdAt
+          updatedAt
+          albumCategoryAlbumsId
+          songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
+        }
+        nextToken
+      }
+      favoriteArtists {
+        items {
+          id
+          name
+          imageUri
+          description
+          createdAt
+          updatedAt
+          albumArtistsId
+          userFavoriteArtistsId
+        }
+        nextToken
+      }
+      favoriteCountries {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          userFavoriteCountriesId
         }
         nextToken
       }
@@ -465,6 +1011,7 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser(filter: $filter) {
       id
       avatarUri
+      isChosenCategories
       isAdmin
       playLists {
         items {
@@ -474,6 +1021,80 @@ export const onDeleteUser = /* GraphQL */ `
           createdAt
           updatedAt
           userPlayListsId
+        }
+        nextToken
+      }
+      favoriteCategories {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          albumIncludedSongCategoriesId
+          userFavoriteCategoriesId
+        }
+        nextToken
+      }
+      favoriteSongs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      favoriteAlbums {
+        items {
+          id
+          name
+          creator
+          numberOfLikes
+          imageUri
+          artistHeadline
+          createdAt
+          updatedAt
+          albumCategoryAlbumsId
+          songAlbumsId
+          artistAlbumsId
+          userFavoriteAlbumsId
+        }
+        nextToken
+      }
+      favoriteArtists {
+        items {
+          id
+          name
+          imageUri
+          description
+          createdAt
+          updatedAt
+          albumArtistsId
+          userFavoriteArtistsId
+        }
+        nextToken
+      }
+      favoriteCountries {
+        items {
+          id
+          name
+          imageUri
+          createdAt
+          updatedAt
+          userFavoriteCountriesId
         }
         nextToken
       }
@@ -487,22 +1108,54 @@ export const onCreatePlayList = /* GraphQL */ `
     onCreatePlayList(filter: $filter) {
       id
       title
+      imageUri
       songs {
         items {
           id
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
         }
         nextToken
       }
-      imageUri
+      createdBy {
+        id
+        avatarUri
+        isChosenCategories
+        isAdmin
+        playLists {
+          nextToken
+        }
+        favoriteCategories {
+          nextToken
+        }
+        favoriteSongs {
+          nextToken
+        }
+        favoriteAlbums {
+          nextToken
+        }
+        favoriteArtists {
+          nextToken
+        }
+        favoriteCountries {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
       userPlayListsId
@@ -514,22 +1167,54 @@ export const onUpdatePlayList = /* GraphQL */ `
     onUpdatePlayList(filter: $filter) {
       id
       title
+      imageUri
       songs {
         items {
           id
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
         }
         nextToken
       }
-      imageUri
+      createdBy {
+        id
+        avatarUri
+        isChosenCategories
+        isAdmin
+        playLists {
+          nextToken
+        }
+        favoriteCategories {
+          nextToken
+        }
+        favoriteSongs {
+          nextToken
+        }
+        favoriteAlbums {
+          nextToken
+        }
+        favoriteArtists {
+          nextToken
+        }
+        favoriteCountries {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
       userPlayListsId
@@ -541,25 +1226,156 @@ export const onDeletePlayList = /* GraphQL */ `
     onDeletePlayList(filter: $filter) {
       id
       title
+      imageUri
       songs {
         items {
           id
           imageUri
           title
           songUri
+          listened
           lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
+          songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
+          countrySongsId
         }
         nextToken
       }
-      imageUri
+      createdBy {
+        id
+        avatarUri
+        isChosenCategories
+        isAdmin
+        playLists {
+          nextToken
+        }
+        favoriteCategories {
+          nextToken
+        }
+        favoriteSongs {
+          nextToken
+        }
+        favoriteAlbums {
+          nextToken
+        }
+        favoriteArtists {
+          nextToken
+        }
+        favoriteCountries {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
       userPlayListsId
+    }
+  }
+`;
+export const onCreateCountry = /* GraphQL */ `
+  subscription OnCreateCountry($filter: ModelSubscriptionCountryFilterInput) {
+    onCreateCountry(filter: $filter) {
+      id
+      name
+      imageUri
+      songs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      userFavoriteCountriesId
+    }
+  }
+`;
+export const onUpdateCountry = /* GraphQL */ `
+  subscription OnUpdateCountry($filter: ModelSubscriptionCountryFilterInput) {
+    onUpdateCountry(filter: $filter) {
+      id
+      name
+      imageUri
+      songs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      userFavoriteCountriesId
+    }
+  }
+`;
+export const onDeleteCountry = /* GraphQL */ `
+  subscription OnDeleteCountry($filter: ModelSubscriptionCountryFilterInput) {
+    onDeleteCountry(filter: $filter) {
+      id
+      name
+      imageUri
+      songs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          createdAt
+          updatedAt
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
+          userFavoriteSongsId
+          playListSongsId
+          countrySongsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      userFavoriteCountriesId
     }
   }
 `;
