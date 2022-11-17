@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native"
 import AlbumHeader from "../../components/AlbumHeader"
 import SongListItem from "../../components/SongListItem"
@@ -8,24 +8,35 @@ import { getAlbum } from "../../src/graphql/queries"
 import { LinearGradient } from "expo-linear-gradient"
 import constants from "../../constants"
 import { AppContext } from "../../AppContext"
+import TrackPlayer from "react-native-track-player"
 
 export default function AlbumScreen() {
   const [songs, setSongs] = useState([])
+  const [isAlbumAdded, setAlbumAddedState] = useState(false)
   const [albumDetails, setAlbumDetails] = useState()
 
-  const { setSongsOfAlbum, songsOfAlbum } = useContext(AppContext)
+  const { setSongsOfAlbum, songsOfAlbum, hasTrack, setHasTrackState } =
+    useContext(AppContext)
 
   const route = useRoute()
+
+  function listSongsOfAlbum(songs: any[]) {
+    let listOfSongs: any[] = []
+    songs.forEach((item) => {
+      listOfSongs.push({
+        id: item.id,
+        artist: item.artist,
+        url: item.songUri,
+        artwork: item.imageUri,
+        title: item.title,
+      })
+    })
+    // console.log(listOfSongs)
+    return listOfSongs
+  }
+
   useEffect(() => {
     const albumId = route!.params!.id
-
-    function listSongsOfAlbum(songs: any[]) {
-      let listOfSongs: any[] = []
-      songs.forEach((item) => {
-        listOfSongs.push(item.id)
-      })
-      return listOfSongs
-    }
 
     async function fetchAlbumDetail() {
       try {
@@ -34,14 +45,33 @@ export default function AlbumScreen() {
         )
         setAlbumDetails(data.data.getAlbum)
         setSongs(data.data.getAlbum.songs.items)
-        setSongsOfAlbum(listSongsOfAlbum(data.data.getAlbum.songs.items))
+
+        // await TrackPlayer.reset()
+        // await TrackPlayer.add(listSongsOfAlbum(data.data.getAlbum.songs.items))
+
+        // console.log(await TrackPlayer.play())
       } catch (e) {
-        console.log(e)
+        console.log("Album Screen", e)
       }
     }
 
     fetchAlbumDetail()
   }, [])
+
+  useEffect(() => {
+    console.log("PLAYER has track? ", hasTrack)
+    if (hasTrack === false) {
+      setAlbumAddedState(false)
+    }
+  }, [hasTrack])
+
+  const addAlbumToTrackList = useCallback(async () => {
+    if (isAlbumAdded) return
+    await TrackPlayer.reset()
+    await TrackPlayer.add(listSongsOfAlbum(songs))
+    await TrackPlayer.play()
+    setAlbumAddedState(true)
+  }, [songs, isAlbumAdded])
 
   return (
     <View style={styles.container}>
@@ -57,7 +87,14 @@ export default function AlbumScreen() {
       <FlatList
         data={songs}
         style={{ minHeight: "100%" }}
-        renderItem={({ item }) => <SongListItem song={item} />}
+        renderItem={({ item }) => (
+          <SongListItem
+            song={item}
+            index={songs.indexOf(item)}
+            addAlbumToTrackList={addAlbumToTrackList}
+            isAlbumAdded={isAlbumAdded}
+          />
+        )}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={() => <AlbumHeader album={albumDetails} />}
         ListFooterComponent={() => <View style={{ height: 80 }}></View>}

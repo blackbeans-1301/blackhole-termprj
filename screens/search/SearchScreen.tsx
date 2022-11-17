@@ -25,11 +25,9 @@ export default function SearchScreen() {
   const searchSongs = async () => {
     try {
       const data = await API.graphql(graphqlOperation(listSongsForSearch))
-      console.log(data.data.listSongs.items)
-
       setFilteredSongs(filterSongs(data.data.listSongs.items))
     } catch (e) {
-      console.log(e)
+      console.log("error searching song", e)
     }
   }
 
@@ -53,13 +51,11 @@ export default function SearchScreen() {
             keyboardType="default"
             returnKeyType="done"
             onChangeText={(value) => {
-              console.log(value)
               setSongName(value)
             }}
           ></TextInput>
           <TouchableOpacity
             onPress={() => {
-              console.log("searching...")
               searchSongs()
             }}
           >

@@ -36,7 +36,7 @@ export default function PlayListScreen() {
         setSongs(data.data.getAlbum.songs.items)
         setSongsOfAlbum(listSongsOfAlbum(data.data.getAlbum.songs.items))
       } catch (e) {
-        console.log(e)
+        console.log("error get playlist", e)
       }
     }
 

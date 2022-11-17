@@ -28,12 +28,11 @@ export default function LibScreen() {
         const data = await API.graphql(graphqlOperation(listPlayLists))
         setPlayLists(data.data.listPlayLists.items)
       } catch (e) {
-        console.log(e)
+        console.log("error fetch playlist", e)
       }
     }
 
     getListPlaylists()
-    console.log(playLists)
   }, [])
 
   return (

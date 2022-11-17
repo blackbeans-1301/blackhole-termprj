@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Dimensions,
+  animated,
 } from "react-native"
 import styles from "./styles"
 import stylesForFullScreen from "./stylesForFullScreen"
@@ -17,6 +18,7 @@ import {
   MaterialIcons,
   Fontisto,
   MaterialCommunityIcons,
+  createIconSetFromFontello,
 } from "@expo/vector-icons"
 import { Audio, InterruptionModeIOS } from "expo-av"
 import { Sound } from "expo-av/build/Audio"
@@ -24,7 +26,7 @@ import { Foundation } from "@expo/vector-icons"
 import { AppContext } from "../../AppContext"
 
 import { API, graphqlOperation } from "aws-amplify"
-import { getSongToPlay } from "../../src/graphql/queries"
+// import { getSongToPlay } from "../../src/graphql/queries"
 import { LinearGradient } from "expo-linear-gradient"
 import constants from "../../constants"
 import { useNavigation } from "@react-navigation/native"
@@ -46,6 +48,14 @@ import Animated, {
   withTiming,
   runOnJS,
 } from "react-native-reanimated"
+import TrackPlayer, {
+  AppKilledPlaybackBehavior,
+  Capability,
+  RepeatMode,
+  State,
+  useProgress,
+} from "react-native-track-player"
+import { getArtist } from "../../src/graphql/queries"
 
 export type PlayerWidgetProps = {
   song: Song
@@ -55,6 +65,17 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window")
 const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.3
 
 export default function PlayerWidget(props: PlayerWidgetProps) {
+  const {
+    songId,
+    songsOfAlbum,
+    setSongId,
+    setSongsOfAlbum,
+    hasTrack,
+    setHasTrackState,
+  } = useContext(AppContext)
+
+  const progress = useProgress()
+
   const [song, setSong] = useState(null)
   const [sound, setSound] = useState<Sound | null>(null)
   const [isPlaying, setPlaying] = useState<boolean>(true)
@@ -66,12 +87,10 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   const [id, setId] = useState<string | null>("")
   const [isReplay, setReplay] = useState(false)
 
-  const { songId, songsOfAlbum, setSongId, setSongsOfAlbum } =
-    useContext(AppContext)
-
   const translateY = useSharedValue(0)
   const translateX = useSharedValue(0)
   const marginVertical = useSharedValue(10)
+  const isRemoveTrack = useSharedValue(false)
 
   const panGesture = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
     onActive: (event) => {
@@ -85,10 +104,13 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
           -SCREEN_WIDTH,
           undefined,
           (isFinished) => {
-            runOnJS(setId)(null)
+            if (isFinished) {
+              console.log("isfinished:", isFinished)
+              console.log("is remove track: ", isRemoveTrack.value)
+              isRemoveTrack.value = true
+            }
           }
         )
-        translateX.value = withTiming(0)
 
         // setDuration(0)
         // setPosition(null)
@@ -101,110 +123,79 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   })
 
   const rStyle = useAnimatedStyle(() => {
-    "worklet"
+    const opacity = withTiming(
+      translateX.value < TRANSLATE_X_THRESHOLD * 1.5 ? 0 : 1
+    )
+    ;("worklet")
     return {
       transform: [{ translateX: translateX.value }],
+      opacity,
     }
   })
 
   useEffect(() => {
-    if (song) {
-      playCurrentSong()
+    const eraseTrackAndQueue = async () => {
+      setSong(null)
+      await TrackPlayer.pause()
+      await TrackPlayer.reset()
+      setHasTrackState(false)
+      setPlaying(true)
     }
+    if (isRemoveTrack) {
+      console.log("erase procressing")
+      eraseTrackAndQueue()
+    }
+  }, [isRemoveTrack.value])
+
+  useEffect(() => {
+    isRemoveTrack.value = false
+    translateX.value = 0
   }, [song])
 
   useEffect(() => {
-    //fetch song data
-    const fetchSong = async () => {
-      try {
-        const songData = await API.graphql(
-          graphqlOperation(getSongToPlay, { id: songId })
-        )
-        setSong(songData.data.getSong)
-      } catch (e) {
-        console.log(e)
+    const getCurrentTrack = async () => {
+      if (
+        (await TrackPlayer.getTrack(await TrackPlayer.getCurrentTrack())) !==
+        null
+      ) {
+        setSong(await TrackPlayer.getTrack(await TrackPlayer.getCurrentTrack()))
       }
     }
-    fetchSong()
-    setPlaying(true)
-    setId(songId)
-  }, [songId])
 
-  useEffect(() => {
-    // const unloadSound = async () => {
-    //   await sound?.unloadAsync()
-    // }
-    if (id === null) {
-      // unloadSound()
-      setSongId("")
-      setSong(null)
-      setPlaying(false)
-      sound?.pauseAsync()
-      setDuration(0)
-      setPosition(null)
-      setCurrentPosition(0)
-    }
-  }, [id])
-
-  const playCurrentSong = async () => {
-    if (sound) {
-      sound.unloadAsync()
-    }
-    Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      playThroughEarpieceAndroid: false,
-    })
-
-    const { sound: playbackObject } = await Audio.Sound.createAsync(
-      { uri: song.songUri },
-      { shouldPlay: true },
-      onPlayBackStatusUpdate
-    )
-    setSound(playbackObject)
-  }
-
-  const onPlayBackStatusUpdate = (status) => {
-    setPlaying(status.isPlaying)
-    setDuration(status.durationMillis)
-    setPosition(status.positionMillis)
-  }
+    getCurrentTrack()
+  }, [progress.duration])
 
   const onPlayPausePressed = async () => {
-    if (!sound) {
-      return
-    }
-    if (isPlaying) {
-      await sound.pauseAsync()
+    // console.log(typeof (await TrackPlayer.getState()))
+    const playbackState = await TrackPlayer.getState()
+    if (playbackState.toString() === "playing") {
+      setPlaying(false)
+      await TrackPlayer.pause()
     } else {
-      await sound.playAsync()
+      setPlaying(true)
+      await TrackPlayer.play()
     }
   }
 
   const onNextSongPressed = async () => {
-    songsOfAlbum.forEach((item) => {
-      if (item === songId) {
-        if (songsOfAlbum.indexOf(item) === songsOfAlbum.length - 1) {
-          setSongId(songsOfAlbum[0])
-        } else {
-          setSongId(songsOfAlbum[songsOfAlbum.indexOf(item) + 1])
-        }
-      }
-    })
+    let nextTrack = await TrackPlayer.getTrack(
+      (await TrackPlayer.getCurrentTrack()) + 1
+    )
+    if (nextTrack === null) {
+      setSong(await TrackPlayer.getTrack(0))
+      await TrackPlayer.skip(0, 0)
+    } else {
+      setSong(nextTrack)
+      await TrackPlayer.skipToNext()
+    }
   }
 
   const onPrevSongPressed = async () => {
-    songsOfAlbum.forEach((item) => {
-      if (item === songId) {
-        if (songsOfAlbum.indexOf(item) === 0) {
-          setSongId(songsOfAlbum[songsOfAlbum.length - 1])
-        } else {
-          setSongId(songsOfAlbum[songsOfAlbum.indexOf(item) - 1])
-        }
-      }
-    })
+    if ((await TrackPlayer.getCurrentTrack()) === 0) return
+    setSong(
+      await TrackPlayer.getTrack((await TrackPlayer.getCurrentTrack()) - 1)
+    )
+    await TrackPlayer.skipToPrevious()
   }
 
   const onReplayPressed = async () => {
@@ -212,29 +203,39 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   }
 
   useEffect(() => {
-    if (position === undefined) return
-
-    if (position === duration) {
-      if (isReplay) {
-        sound?.replayAsync()
-      } else if (isMixed) {
-        setSongId(songsOfAlbum[Math.floor(Math.random() * songsOfAlbum.length)])
-      } else {
-        onNextSongPressed()
+    const findTheNextSong = async () => {
+      console.log(progress.position, progress.duration)
+      if (progress.duration - progress.position < 2) {
+        console.log("SONG ENDED.")
+        if (isMixed) {
+          const queue = await TrackPlayer.getQueue()
+          const queueLength = queue.length
+          await TrackPlayer.skip(Math.random() * queueLength, 0)
+        }
       }
     }
-  }, [position])
+    findTheNextSong()
+  }, [progress.position])
 
   const getProgress = () => {
-    if (sound === null || duration === null || position === null) {
-      return 0
-    } else if (duration === undefined) {
-      return 0
-    }
-    return Math.round((position / duration) * 920) / 10
+    const positionPercent = progress.position / progress.duration
+    if (positionPercent === NaN) return 0
+    return positionPercent
   }
 
-  if (!song) {
+  const getPositionInMinutes = () => {
+    const minutes = Math.floor(progress.position / 60)
+    const sec = Math.floor(progress.position - minutes * 60)
+    return `0${minutes}:${sec / 10 < 1 ? `0${sec}` : sec}`
+  }
+
+  const getDurationInMinutes = () => {
+    const minutes = Math.floor(progress.duration / 60)
+    const sec = Math.floor(progress.duration - minutes * 60)
+    return `0${minutes}:${sec / 10 < 1 ? `0${sec}` : sec}`
+  }
+
+  if (song === null || hasTrack === false || isRemoveTrack.value) {
     return null
   }
 
@@ -258,7 +259,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
             style={[
               {
                 height: 1,
-                width: `${getProgress()}%`,
+                width: `${getProgress() * 93}%`,
                 backgroundColor: "#fae2c8",
                 marginLeft: "3.5%",
               },
@@ -294,7 +295,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
               }}
             >
               <Image
-                source={{ uri: song.imageUri }}
+                source={{ uri: song.artwork }}
                 style={[styles.image, styles.elevation]}
               ></Image>
             </TouchableWithoutFeedback>
@@ -306,9 +307,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
               >
                 <View>
                   <Text style={styles.title}>{song.title}</Text>
-                  <Text style={styles.artist}>
-                    {song.artist && song.artist.name}
-                  </Text>
+                  <Text style={styles.artist}>{song.artist.name}</Text>
                 </View>
               </TouchableWithoutFeedback>
 
@@ -369,7 +368,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
         </View>
         <View style={stylesForFullScreen.imageView}>
           <Image
-            source={{ uri: song.imageUri }}
+            source={{ uri: song.artwork }}
             style={stylesForFullScreen.image}
           ></Image>
         </View>
@@ -377,9 +376,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
         {/* song and artist view */}
         <View style={stylesForFullScreen.songAndArtist}>
           <Text style={stylesForFullScreen.title}>{song.title}</Text>
-          <Text style={stylesForFullScreen.artist}>
-            {song.artist && song.artist.name}
-          </Text>
+          <Text style={stylesForFullScreen.artist}>{song.artist.name}</Text>
         </View>
 
         {/* progress bar */}
@@ -388,7 +385,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
             <View
               style={{
                 height: 6,
-                width: `${(getProgress() * 100) / 92}%`,
+                width: `${getProgress() * 100}%`,
                 backgroundColor: "#fff",
                 position: "absolute",
                 borderRadius: 5,
@@ -402,24 +399,19 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
               style={{ width: "99%", height: 5, position: "absolute", top: 0 }}
               minimumValue={0}
               maximumValue={1}
-              value={getProgress() / 92 || 0}
+              value={getProgress()}
               minimumTrackTintColor="#fff"
               maximumTrackTintColor="#ccc"
               thumbTintColor="#ffffff"
-              onValueChange={(value) => {
-                setCurrentPosition(value * duration)
-              }}
               onSlidingStart={async () => {
-                // if (!context.isPlaying) return
-                // try {
-                //   await pause(context.playbackObj)
-                // } catch (error) {
-                //   console.log("error inside onSlidingStart callback", error)
-                // }
+                await TrackPlayer.pause()
               }}
               onSlidingComplete={async (value) => {
                 await sound?.setPositionAsync(Math.floor(value * duration))
                 setPosition(Math.floor(value * duration))
+                await TrackPlayer.seekTo(value * progress.duration)
+                await TrackPlayer.play()
+
                 //  await moveAudio(context, value)
                 // setCurrentPosition(0)
               }}
@@ -427,14 +419,8 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
           )}
 
           <View style={stylesForFullScreen.progressBarTime}>
-            <Text style={{ color: "white" }}>
-              {position && Math.floor((position / 1000 / 60) << 0)}:
-              {position && Math.floor((position / 1000) % 60)}
-            </Text>
-            <Text style={{ color: "white" }}>
-              {duration && Math.floor((duration / 1000 / 60) << 0)}:
-              {duration && Math.floor((duration / 1000) % 60)}
-            </Text>
+            <Text style={{ color: "white" }}>{getPositionInMinutes()}</Text>
+            <Text style={{ color: "white" }}>{getDurationInMinutes()}</Text>
           </View>
         </View>
 

@@ -16,7 +16,12 @@ import { AppContext } from "./AppContext"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 
 import SignUpScreen from "./screens/home/SignUpScreen"
-import TrackPlayer, { Capability, State } from "react-native-track-player"
+import TrackPlayer, {
+  AppKilledPlaybackBehavior,
+  Capability,
+  State,
+  Event,
+} from "react-native-track-player"
 
 Amplify.configure(config)
 
@@ -36,6 +41,9 @@ const track1 = {
 async function setup() {
   await TrackPlayer.setupPlayer({})
   await TrackPlayer.updateOptions({
+    android: {
+      appKilledPlaybackBehavior: AppKilledPlaybackBehavior.PausePlayback,
+    },
     capabilities: [
       Capability.Play,
       Capability.Pause,
@@ -44,29 +52,29 @@ async function setup() {
       Capability.Stop,
       Capability.SeekTo,
     ],
-    compactCapabilities: [Capability.Play, Capability.Pause],
+    compactCapabilities: [
+      Capability.Play,
+      Capability.Pause,
+      Capability.SkipToNext,
+      Capability.SkipToPrevious,
+    ],
   })
 
-  await TrackPlayer.add([track1])
-
-  const state = await TrackPlayer.getState()
-  if (state === State.Playing) {
-    console.log("The player is playing")
-  }
-
-  let trackIndex = await TrackPlayer.getCurrentTrack()
-  let trackObject = await TrackPlayer.getTrack(trackIndex)
-  console.log(`Title: ${trackObject.title}`)
-
-  console.log("fhsaifh")
-
-  TrackPlayer.play()
+  TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play())
+  TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause())
+  TrackPlayer.addEventListener(Event.RemoteNext, () => TrackPlayer.skipToNext())
+  TrackPlayer.addEventListener(Event.RemotePrevious, () =>
+    TrackPlayer.skipToPrevious()
+  )
 }
 
 function App() {
-  setup()
-
   const { hasUser } = useContext(AppContext)
+
+  useEffect(() => {
+    setup()
+  }, [])
+
   console.log(hasUser)
   return (
     <SafeAreaProvider>
@@ -100,9 +108,11 @@ function AppWithAuthentication() {
   const isLoadingComplete = useCachedResources()
   const colorScheme = useColorScheme()
 
+  const [hasTrack, setHasTrackState] = useState(false)
   const [songId, setSongId] = useState("")
   const [songsOfAlbum, setSongsOfAlbum] = useState<string[]>([])
   const [hasUser, setUser] = useState("")
+  const [isAlbumAdded, setAlbumAddedState] = useState(false)
 
   const onDismissed = useCallback((songId: string) => {
     setSongId("")
@@ -121,6 +131,12 @@ function AppWithAuthentication() {
             setSongsOfAlbum: (songsId: string[]) => setSongsOfAlbum(songsId),
             hasUser,
             setUser: (userId: string) => setUser(userId),
+            hasTrack,
+            setHasTrackState: (isPlaying: boolean) =>
+              setHasTrackState(isPlaying),
+            isAlbumAdded,
+            setAlbumAddedState: (isAlbumAdded: boolean) =>
+              setAlbumAddedState(isAlbumAdded),
           }}
         >
           <Navigation colorScheme={colorScheme} />

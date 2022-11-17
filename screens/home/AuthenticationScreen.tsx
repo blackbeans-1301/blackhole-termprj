@@ -41,7 +41,7 @@ export default function AuthenticationScreen() {
       const response = await Auth.signIn(userName, passWord)
       console.log(response)
     } catch (e) {
-      console.log(e)
+      console.log("Error signin", e)
       setCorrectInformation(false)
     }
   }

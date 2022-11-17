@@ -15,7 +15,7 @@ export default function HomeScreen() {
         const data = await API.graphql(graphqlOperation(listAlbumCategories))
         setCategories(data.data.listAlbumCategories.items)
       } catch (e) {
-        console.log(e)
+        console.log("error fetch album", e)
       }
     }
 
@@ -28,10 +28,10 @@ export default function HomeScreen() {
         <FlatList
           style={styles.list}
           data={categories}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <AlbumCategory title={item.title} albums={item.albums.items} />
           )}
-          keyExtractor={(item) => item.id}
         />
       </View>
     </SafeAreaView>
