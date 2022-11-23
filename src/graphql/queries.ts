@@ -489,6 +489,18 @@ export const getUser = /* GraphQL */ `
     }
   }
 `
+
+export const getUserForAuth = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      avatarUri
+      isChosenCategories
+      isAdmin
+  }
+}
+`
+
 export const listUsers = /* GraphQL */ `
   query ListUsers(
     $filter: ModelUserFilterInput

@@ -1,49 +1,83 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   SafeAreaView,
   Image,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native"
-import AlbumCategory from "../../components/AlbumCategory"
 import { API, Auth, graphqlOperation } from "aws-amplify"
-import { listAlbumCategories } from "../../src/graphql/queries"
-import { SafeAreaProvider } from "react-native-safe-area-context"
-import { useNavigation } from "@react-navigation/native"
+import { getUserForAuth } from "../../src/graphql/queries"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import constants from "../../constants"
+import { AppContext } from "../../AppContext"
 
 export default function AuthenticationScreen() {
-  const [userName, setUserName] = useState("")
+  // Auth.signOut()
+
+  const route = useRoute()
+  const username = route?.params?.username
+
+  const [userName, setUserName] = useState(username || "")
   const [passWord, setPassWord] = useState("")
   const navigation = useNavigation()
 
   const [correctInput, setCorrectInput] = useState(true)
   const [correctInformation, setCorrectInformation] = useState(true)
   const [isSigningIn, setSingingIn] = useState(false)
+  const [singIngErrorMessage, setSingIngErrorMessage] = useState("")
+
+  const { hasUser, setUser } = useContext(AppContext)
 
   const goToSignUp = () => {
     console.log("signup")
-    navigation.navigate("SignUpScreen")
+    navigation.navigate("SignUpScreen", {})
   }
 
   const onSignInPressed = async () => {
+    setSingIngErrorMessage("")
+    setCorrectInformation(true)
+    setCorrectInput(true)
+    if (isSigningIn) return
+
     if (userName === "" || passWord === "") {
       setCorrectInput(false)
       return
     }
-    setCorrectInput(true)
+    setSingingIn(true)
     try {
       const response = await Auth.signIn(userName, passWord)
-      console.log(response)
+      signInToApp(response.attributes.sub)
     } catch (e) {
       console.log("Error signin", e)
       setCorrectInformation(false)
+      setSingingIn(false)
     }
+  }
+
+  const onForgotPasswordPressed = async () => {
+    navigation.navigate("ForgotPasswordScreen", {})
+  }
+
+  const signInToApp = async (userId: string) => {
+    try {
+      const response = await API.graphql(
+        graphqlOperation(getUserForAuth, { id: userId })
+      )
+      setSingingIn(false)
+
+      if (response.data.getUser === null) {
+        setSingIngErrorMessage(
+          "User not found, please check your username and sign in again"
+        )
+      } else {
+        setUser(userId)
+        // navigation.navigate("AppScreen", {})
+      }
+    } catch (e) {}
   }
 
   return (
@@ -97,11 +131,15 @@ export default function AuthenticationScreen() {
           </View>
 
           {/* for signin button */}
-          <TouchableOpacity onPress={onSignInPressed}>
-            <View style={styles.signInButton}>
-              {isSigningIn ? (
-                <ActivityIndicator></ActivityIndicator>
-              ) : (
+          {isSigningIn ? (
+            <ActivityIndicator
+              color={constants.colors.primaryColor}
+              size={36}
+              style={{ marginTop: 18 }}
+            ></ActivityIndicator>
+          ) : (
+            <TouchableOpacity onPress={onSignInPressed}>
+              <View style={styles.signInButton}>
                 <Text
                   style={{
                     color: "white",
@@ -111,7 +149,23 @@ export default function AuthenticationScreen() {
                 >
                   Sign In
                 </Text>
-              )}
+              </View>
+            </TouchableOpacity>
+          )}
+
+          {/* Forgot password */}
+          <TouchableOpacity onPress={onForgotPasswordPressed}>
+            <View
+              style={{
+                width: "100%",
+                height: 20,
+                alignItems: "center",
+                marginTop: 20,
+              }}
+            >
+              <Text style={{ color: "#ccc", fontSize: 16 }}>
+                Forgot password?{" "}
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -122,10 +176,15 @@ export default function AuthenticationScreen() {
                 width: "100%",
                 height: 20,
                 alignItems: "center",
-                marginTop: 20,
+                marginTop: 50,
               }}
             >
-              <Text style={{ color: "#ccc", fontSize: 16 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: constants.colors.primaryColor,
+                }}
+              >
                 Don't have account? Sign up here!
               </Text>
             </View>

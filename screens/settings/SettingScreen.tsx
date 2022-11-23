@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native"
 import { AntDesign } from "@expo/vector-icons"
 import EditScreenInfo from "../../components/EditScreenInfo"
@@ -6,11 +6,18 @@ import { RootTabScreenProps } from "../../types"
 import { Auth } from "aws-amplify"
 import constants from "../../constants"
 import { TouchableOpacity } from "react-native"
+import { navigationRef } from "../../RootNavigation"
+import { useNavigation } from "@react-navigation/native"
+import { AppContext } from "../../AppContext"
 
-const options = ["Your Profile", "Change Password", "Sign Out"]
+const options = ["Profile", "Change Password", "Sign Out"]
 
 export default function SettingScreen() {
-  const [userName, setUserName] = useState("")
+  const [name, setName] = useState("")
+  const [username, setUsername] = useState("")
+  const [userInfo, setUserInfo] = useState()
+  const navigation = useNavigation()
+  const { setUser } = useContext(AppContext)
 
   const checkUser = async () => {
     const authUser = await Auth.currentAuthenticatedUser({
@@ -18,9 +25,30 @@ export default function SettingScreen() {
     })
     console.log(authUser)
 
-    setUserName(authUser.username)
-    console.log(userName)
+    setName(authUser.attributes.name)
+    setUsername(authUser.username)
+    setUserInfo(authUser)
   }
+
+  const onOptionPressed = useCallback(
+    async (option: string) => {
+      if (option === "Profile") {
+        console.log("go to profile screen")
+        navigation.navigate("ProfileScreen", { userInfo: userInfo })
+      }
+      if (option === "Sign Out") {
+        const response = await Auth.signOut()
+        setUser("")
+        console.log(response)
+      }
+
+      if (option === "Change Password") {
+        console.log(username)
+        navigation.navigate("ChangePasswordScreen", { username: username })
+      }
+    },
+    [name]
+  )
 
   useEffect(() => {
     checkUser()
@@ -40,15 +68,16 @@ export default function SettingScreen() {
       <Text style={styles.userName}>
         Hi,{" "}
         <Text style={{ color: constants.colors.primaryColor, fontSize: 28 }}>
-          {userName}
+          {name}
         </Text>
       </Text>
       <View style={styles.settingOption}>
         <FlatList
-          style={{ marginTop: 70 }}
+          style={{ marginTop: 20 }}
           data={options}
-          style={{}}
-          renderItem={({ item }) => <OptionItem option={item} />}
+          renderItem={({ item }) => (
+            <OptionItem option={item} onOptionPressed={onOptionPressed} />
+          )}
           keyExtractor={(item) => item}
           ListFooterComponent={() => <View style={{ height: 80 }}></View>}
         ></FlatList>
@@ -58,16 +87,12 @@ export default function SettingScreen() {
 }
 
 function OptionItem(props) {
-  const optionPressed = async (option: string) => {
-    if (option === "Sign Out") {
-      Auth.signOut()
-    }
-  }
+  const { onOptionPressed, option } = props
 
   return (
     <TouchableOpacity
       onPress={() => {
-        optionPressed(props.option)
+        onOptionPressed(option)
       }}
     >
       <View
@@ -90,7 +115,7 @@ function OptionItem(props) {
             fontWeight: "500",
           }}
         >
-          {props.option}
+          {option}
         </Text>
       </View>
     </TouchableOpacity>
@@ -116,10 +141,9 @@ const styles = StyleSheet.create({
     marginLeft: 25,
     fontWeight: "bold",
     paddingBottom: 5,
-    width: 170,
+    width: "50%",
     borderBottomColor: constants.colors.primaryColor,
     borderBottomWidth: 3,
-    marginBottom: 20,
   },
   settingTitle: {
     marginLeft: 25,

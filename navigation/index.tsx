@@ -34,6 +34,8 @@ import constants from "../constants"
 
 import { navigationRef } from "../RootNavigation"
 import PlayListNavigator from "./PlayListNavigator"
+import SettingNavigation from "./SettingNavigator"
+import SettingNavigator from "./SettingNavigator"
 
 export default function Navigation({
   colorScheme,
@@ -131,7 +133,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Settings"
-        component={SettingScreen}
+        component={SettingNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="settings" color={color} />

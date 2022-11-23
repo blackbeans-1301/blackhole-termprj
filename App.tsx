@@ -8,7 +8,7 @@ import PlayerWidget from "./components/PlayerWidget"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { NavigationContainer } from "@react-navigation/native"
 
-import { Amplify, Auth, auth0SignInButton } from "aws-amplify"
+import { Amplify, Auth, auth0SignInButton, Hub } from "aws-amplify"
 import config from "./src/aws-exports"
 import AuthenticationScreen from "./screens/home/AuthenticationScreen"
 
@@ -22,6 +22,9 @@ import TrackPlayer, {
   State,
   Event,
 } from "react-native-track-player"
+import ConfirmEmailScreen from "./screens/home/ConfirmEmailScreen"
+import ForgotPasswordScreen from "./screens/home/ForgotPasswordScreen"
+import ResetPasswordScreen from "./screens/home/ResetPasswordScreen"
 
 Amplify.configure(config)
 
@@ -70,33 +73,80 @@ async function setup() {
 
 function App() {
   const { hasUser } = useContext(AppContext)
+  const [user, setUser] = useState(undefined)
+
+  const checkUser = async () => {
+    try {
+      const authUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      })
+      setUser(authUser)
+    } catch (e) {
+      setUser(null)
+    }
+  }
 
   useEffect(() => {
-    setup()
+    checkUser()
   }, [])
 
-  console.log(hasUser)
+  useEffect(() => {
+    const listener = (data) => {
+      if (data.payload.event === "signIn" || data.payload.event === "signOut") {
+        checkUser()
+      }
+    }
+
+    Hub.listen("auth", listener)
+    return () => Hub.remove("auth", listener)
+  }, [])
+
+  //console.log(hasUser)
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={hasUser !== "" ? "SignInScreen" : "AppScreen"}
+          initialRouteName={hasUser === "" ? "SignInScreen" : "AppScreen"}
         >
-          <Stack.Screen
-            name="SignInScreen"
-            component={AuthenticationScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SignUpScreen"
-            component={SignUpScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="AppScreen"
-            component={AppWithAuthentication}
-            options={{ headerShown: false }}
-          />
+          {user ? (
+            <Stack.Screen
+              name="AppScreen"
+              component={AppWithAuthentication}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <>
+              <Stack.Screen
+                name="SignInScreen"
+                component={AuthenticationScreen}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="SignUpScreen"
+                component={SignUpScreen}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="ConfirmEmailScreen"
+                component={ConfirmEmailScreen}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="ForgotPasswordScreen"
+                component={ForgotPasswordScreen}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="ResetPasswordScreen"
+                component={ResetPasswordScreen}
+                options={{ headerShown: false }}
+              />
+            </>
+          )}
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
@@ -105,6 +155,10 @@ function App() {
 
 function AppWithAuthentication() {
   // Auth.signOut()
+  useEffect(() => {
+    setup()
+  }, [])
+
   const isLoadingComplete = useCachedResources()
   const colorScheme = useColorScheme()
 

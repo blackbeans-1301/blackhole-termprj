@@ -206,7 +206,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
     const findTheNextSong = async () => {
       console.log(progress.position, progress.duration)
       if (progress.duration - progress.position < 2) {
-        console.log("SONG ENDED.")
+        // console.log("SONG ENDED.")
         if (isMixed) {
           const queue = await TrackPlayer.getQueue()
           const queueLength = queue.length
