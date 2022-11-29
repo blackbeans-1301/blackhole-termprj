@@ -44,8 +44,7 @@ export default function ChangePasswordScreen() {
     setLoadingState(true)
     try {
       const user = await Auth.currentAuthenticatedUser()
-      const response = await Auth.changePassword(user, oldPassword, newPassword)
-      console.log(response)
+      await Auth.changePassword(user, oldPassword, newPassword)
       navigation.goBack()
     } catch (e) {
       if (e) {

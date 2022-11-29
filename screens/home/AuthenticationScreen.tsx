@@ -33,7 +33,6 @@ export default function AuthenticationScreen() {
   const { hasUser, setUser } = useContext(AppContext)
 
   const goToSignUp = () => {
-    console.log("signup")
     navigation.navigate("SignUpScreen", {})
   }
 

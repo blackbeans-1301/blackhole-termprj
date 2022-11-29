@@ -26,12 +26,11 @@ export default function AlbumScreen() {
       listOfSongs.push({
         id: item.id,
         artist: item.artist,
-        url: item.songUri,
+        url: `http://api.mp3.zing.vn/api/streaming/audio/${item.songUri}/320`,
         artwork: item.imageUri,
         title: item.title,
       })
     })
-    // console.log(listOfSongs)
     return listOfSongs
   }
 
@@ -45,11 +44,6 @@ export default function AlbumScreen() {
         )
         setAlbumDetails(data.data.getAlbum)
         setSongs(data.data.getAlbum.songs.items)
-
-        // await TrackPlayer.reset()
-        // await TrackPlayer.add(listSongsOfAlbum(data.data.getAlbum.songs.items))
-
-        // console.log(await TrackPlayer.play())
       } catch (e) {
         console.log("Album Screen", e)
       }
@@ -59,7 +53,6 @@ export default function AlbumScreen() {
   }, [])
 
   useEffect(() => {
-    console.log("PLAYER has track? ", hasTrack)
     if (hasTrack === false) {
       setAlbumAddedState(false)
     }

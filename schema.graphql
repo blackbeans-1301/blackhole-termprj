@@ -37,7 +37,7 @@ type Song @model @auth(rules: [{ allow: public }]) {
   searchString: String
   lyrics: String
   averageScore: Float
-  ratedTime: Int
+  ratedTime: 
 
   artist: Artist @belongsTo
   category: SongCategory @belongsTo

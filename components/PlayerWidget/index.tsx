@@ -253,7 +253,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
             style={[
               {
                 height: 1,
-                width: `${getProgress() * 93}%`,
+                width: `${getProgress() * 93 || 0}%`,
                 backgroundColor: "#fae2c8",
                 marginLeft: "3.5%",
               },

@@ -51,7 +51,6 @@ export default function ConfirmEmailScreen() {
 
     try {
       const response = await Auth.confirmSignUp(username, code)
-      console.log(response)
       if (response.toString() === "SUCCESS") {
         setResponse("Confirm Successfully, go to Sign in screen now!")
       }
@@ -86,7 +85,6 @@ export default function ConfirmEmailScreen() {
           },
         })
       )
-      console.log(response)
     } catch (e) {
       console.log(e)
     }

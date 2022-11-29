@@ -36,7 +36,7 @@ export const getSongCategory = /* GraphQL */ `
       userFavoriteCategoriesId
     }
   }
-`;
+`
 export const listSongCategories = /* GraphQL */ `
   query ListSongCategories(
     $filter: ModelSongCategoryFilterInput
@@ -59,7 +59,7 @@ export const listSongCategories = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getAlbumCategory = /* GraphQL */ `
   query GetAlbumCategory($id: ID!) {
     getAlbumCategory(id: $id) {
@@ -87,7 +87,7 @@ export const getAlbumCategory = /* GraphQL */ `
       albumAlbumCategoriesId
     }
   }
-`;
+`
 export const listAlbumCategories = /* GraphQL */ `
   query ListAlbumCategories(
     $filter: ModelAlbumCategoryFilterInput
@@ -100,15 +100,20 @@ export const listAlbumCategories = /* GraphQL */ `
         title
         albums {
           nextToken
+          items {
+            id
+            name
+            artistHeadline
+            numberOfLikes
+            creator
+            imageUri
+          }
         }
-        createdAt
-        updatedAt
-        albumAlbumCategoriesId
       }
       nextToken
     }
   }
-`;
+`
 export const getAlbum = /* GraphQL */ `
   query GetAlbum($id: ID!) {
     getAlbum(id: $id) {
@@ -118,16 +123,6 @@ export const getAlbum = /* GraphQL */ `
       numberOfLikes
       imageUri
       artistHeadline
-      albumCategories {
-        items {
-          id
-          title
-          createdAt
-          updatedAt
-          albumAlbumCategoriesId
-        }
-        nextToken
-      }
       songs {
         items {
           id
@@ -135,56 +130,59 @@ export const getAlbum = /* GraphQL */ `
           title
           songUri
           listened
-          searchString
           lyrics
           averageScore
           ratedTime
-          createdAt
-          updatedAt
-          songCategorySongsId
-          albumSongsId
-          artistSongsId
           userFavoriteSongsId
-          playListSongsId
-          countrySongsId
+          artist {
+            id
+            name
+          }
         }
         nextToken
       }
-      artists {
-        items {
-          id
-          name
-          imageUri
-          description
-          searchString
-          createdAt
-          updatedAt
-          albumArtistsId
-          userFavoriteArtistsId
-        }
-        nextToken
-      }
-      includedSongCategories {
-        items {
-          id
-          name
-          imageUri
-          createdAt
-          updatedAt
-          albumIncludedSongCategoriesId
-          userFavoriteCategoriesId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      albumCategoryAlbumsId
-      songAlbumsId
-      artistAlbumsId
-      userFavoriteAlbumsId
     }
   }
-`;
+`
+
+export const listSongsForSearch = /* GraphQL */ `
+  query ListAlbums(
+    $filter: ModelAlbumFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAlbums(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        creator
+        numberOfLikes
+        imageUri
+        artistHeadline
+        albumCategories {
+          nextToken
+        }
+        songs {
+          nextToken
+        }
+        artists {
+          nextToken
+        }
+        includedSongCategories {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        albumCategoryAlbumsId
+        songAlbumsId
+        artistAlbumsId
+        userFavoriteAlbumsId
+      }
+      nextToken
+    }
+  }
+`
+
 export const listAlbums = /* GraphQL */ `
   query ListAlbums(
     $filter: ModelAlbumFilterInput
@@ -221,7 +219,7 @@ export const listAlbums = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getSong = /* GraphQL */ `
   query GetSong($id: ID!) {
     getSong(id: $id) {
@@ -301,7 +299,7 @@ export const getSong = /* GraphQL */ `
       countrySongsId
     }
   }
-`;
+`
 export const listSongs = /* GraphQL */ `
   query ListSongs(
     $filter: ModelSongFilterInput
@@ -362,7 +360,7 @@ export const listSongs = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getArtist = /* GraphQL */ `
   query GetArtist($id: ID!) {
     getArtist(id: $id) {
@@ -416,7 +414,7 @@ export const getArtist = /* GraphQL */ `
       userFavoriteArtistsId
     }
   }
-`;
+`
 export const listArtists = /* GraphQL */ `
   query ListArtists(
     $filter: ModelArtistFilterInput
@@ -444,7 +442,7 @@ export const listArtists = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
@@ -543,7 +541,7 @@ export const getUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listUsers = /* GraphQL */ `
   query ListUsers(
     $filter: ModelUserFilterInput
@@ -580,7 +578,7 @@ export const listUsers = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getPlayList = /* GraphQL */ `
   query GetPlayList($id: ID!) {
     getPlayList(id: $id) {
@@ -640,7 +638,7 @@ export const getPlayList = /* GraphQL */ `
       userPlayListsId
     }
   }
-`;
+`
 export const listPlayLists = /* GraphQL */ `
   query ListPlayLists(
     $filter: ModelPlayListFilterInput
@@ -670,7 +668,7 @@ export const listPlayLists = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getCountry = /* GraphQL */ `
   query GetCountry($id: ID!) {
     getCountry(id: $id) {
@@ -704,7 +702,7 @@ export const getCountry = /* GraphQL */ `
       userFavoriteCountriesId
     }
   }
-`;
+`
 export const listCountries = /* GraphQL */ `
   query ListCountries(
     $filter: ModelCountryFilterInput
@@ -726,4 +724,4 @@ export const listCountries = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`

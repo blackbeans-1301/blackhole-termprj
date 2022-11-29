@@ -23,7 +23,6 @@ export default function SettingScreen() {
     const authUser = await Auth.currentAuthenticatedUser({
       bypassCache: true,
     })
-    console.log(authUser)
 
     setName(authUser.attributes.name)
     setUsername(authUser.username)
@@ -39,7 +38,6 @@ export default function SettingScreen() {
       if (option === "Sign Out") {
         const response = await Auth.signOut()
         setUser("")
-        console.log(response)
       }
 
       if (option === "Change Password") {

@@ -101,7 +101,6 @@ function App() {
     return () => Hub.remove("auth", listener)
   }, [])
 
-  //console.log(hasUser)
   return (
     <SafeAreaProvider>
       <NavigationContainer>
