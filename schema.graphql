@@ -1,6 +1,13 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
 
+type SongCategory @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  songs: [Song] @hasMany
+  imageUri: String
+}
+
 type AlbumCategory @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
@@ -17,6 +24,8 @@ type Album @model @auth(rules: [{ allow: public }]) {
 
   albumCategories: [AlbumCategory] @hasMany
   songs: [Song] @hasMany
+  artists: [Artist] @hasMany
+  includedSongCategories: [SongCategory] @hasMany
 }
 
 type Song @model @auth(rules: [{ allow: public }]) {
@@ -24,30 +33,55 @@ type Song @model @auth(rules: [{ allow: public }]) {
   imageUri: String!
   title: String!
   songUri: String!
+  listened: Int
+  searchString: String
   lyrics: String
+  averageScore: Float
+  ratedTime: Int
 
   artist: Artist @belongsTo
+  category: SongCategory @belongsTo
+  country: Country @belongsTo
   albums: [Album] @hasMany
 }
 
 type Artist @model @auth(rules: [{ allow: public }]) {
   id: ID!
   name: String!
-  songs: [Song] @hasMany
   imageUri: String!
   description: String!
+
+  songs: [Song] @hasMany
+  albums: [Album] @hasMany
 }
 
 type User @model @auth(rules: [{ allow: public }]) {
   id: ID!
   avatarUri: String
+  isChosenCategories: Boolean!
   isAdmin: Boolean!
+
   playLists: [PlayList] @hasMany
+  favoriteCategories: [SongCategory] @hasMany
+  favoriteSongs: [Song] @hasMany
+  favoriteAlbums: [Album] @hasMany
+  favoriteArtists: [Artist] @hasMany
+  favoriteCountries: [Country] @hasMany
 }
 
 type PlayList @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  songs: [Song] @hasMany
   imageUri: String!
+
+  songs: [Song] @hasMany
+  createdBy: User @belongsTo
+}
+
+type Country @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  imageUri: String!
+
+  songs: [Song] @hasMany
 }

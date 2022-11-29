@@ -1,5 +1,5 @@
 {
-  "AppSyncApiName": "termprj",
+  "AppSyncApiName": "blackhole",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false
 }

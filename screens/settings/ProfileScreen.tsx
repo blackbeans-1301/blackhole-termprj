@@ -17,7 +17,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import constants from "../../constants"
 
-export default function ForgotPasswordScreen() {
+export default function ProfileScreen() {
   const route = useRoute()
 
   const navigation = useNavigation()

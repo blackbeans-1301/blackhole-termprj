@@ -1,22 +1,22 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-termprj-dev-130125-authRole",
-      "UnauthRoleArn": "arn:aws:iam::925470872460:role/amplify-termprj-dev-130125-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::925470872460:role/amplify-termprj-dev-130125-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-termprj-dev-130125-deployment",
-      "UnauthRoleName": "amplify-termprj-dev-130125-unauthRole",
-      "StackName": "amplify-termprj-dev-130125",
-      "StackId": "arn:aws:cloudformation:us-east-1:925470872460:stack/amplify-termprj-dev-130125/9e6a1270-6318-11ed-82ab-0ed2850ed259",
-      "AmplifyAppId": "d3k8t5zifwek10"
+      "AuthRoleName": "amplify-blackhole-dev-112943-authRole",
+      "UnauthRoleArn": "arn:aws:iam::549670345212:role/amplify-blackhole-dev-112943-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::549670345212:role/amplify-blackhole-dev-112943-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-blackhole-dev-112943-deployment",
+      "UnauthRoleName": "amplify-blackhole-dev-112943-unauthRole",
+      "StackName": "amplify-blackhole-dev-112943",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:549670345212:stack/amplify-blackhole-dev-112943/c993c260-6c79-11ed-93dd-06e52fe5ed44",
+      "AmplifyAppId": "d2f9xp30i1g51q"
     },
     "categories": {
       "api": {
-        "termprj": {}
+        "blackhole": {}
       },
       "auth": {
-        "termprj": {}
+        "blackhole": {}
       }
     }
   }

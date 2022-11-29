@@ -16,6 +16,7 @@ export const onCreateSongCategory = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -52,6 +53,7 @@ export const onUpdateSongCategory = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -88,6 +90,7 @@ export const onDeleteSongCategory = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -226,6 +229,7 @@ export const onCreateAlbum = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -246,6 +250,7 @@ export const onCreateAlbum = /* GraphQL */ `
           name
           imageUri
           description
+          searchString
           createdAt
           updatedAt
           albumArtistsId
@@ -300,6 +305,7 @@ export const onUpdateAlbum = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -320,6 +326,7 @@ export const onUpdateAlbum = /* GraphQL */ `
           name
           imageUri
           description
+          searchString
           createdAt
           updatedAt
           albumArtistsId
@@ -374,6 +381,7 @@ export const onDeleteAlbum = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -394,6 +402,7 @@ export const onDeleteAlbum = /* GraphQL */ `
           name
           imageUri
           description
+          searchString
           createdAt
           updatedAt
           albumArtistsId
@@ -430,6 +439,7 @@ export const onCreateSong = /* GraphQL */ `
       title
       songUri
       listened
+      searchString
       lyrics
       averageScore
       ratedTime
@@ -438,6 +448,7 @@ export const onCreateSong = /* GraphQL */ `
         name
         imageUri
         description
+        searchString
         songs {
           nextToken
         }
@@ -508,6 +519,7 @@ export const onUpdateSong = /* GraphQL */ `
       title
       songUri
       listened
+      searchString
       lyrics
       averageScore
       ratedTime
@@ -516,6 +528,7 @@ export const onUpdateSong = /* GraphQL */ `
         name
         imageUri
         description
+        searchString
         songs {
           nextToken
         }
@@ -586,6 +599,7 @@ export const onDeleteSong = /* GraphQL */ `
       title
       songUri
       listened
+      searchString
       lyrics
       averageScore
       ratedTime
@@ -594,6 +608,7 @@ export const onDeleteSong = /* GraphQL */ `
         name
         imageUri
         description
+        searchString
         songs {
           nextToken
         }
@@ -663,6 +678,7 @@ export const onCreateArtist = /* GraphQL */ `
       name
       imageUri
       description
+      searchString
       songs {
         items {
           id
@@ -670,6 +686,7 @@ export const onCreateArtist = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -715,6 +732,7 @@ export const onUpdateArtist = /* GraphQL */ `
       name
       imageUri
       description
+      searchString
       songs {
         items {
           id
@@ -722,6 +740,7 @@ export const onUpdateArtist = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -767,6 +786,7 @@ export const onDeleteArtist = /* GraphQL */ `
       name
       imageUri
       description
+      searchString
       songs {
         items {
           id
@@ -774,6 +794,7 @@ export const onDeleteArtist = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -849,6 +870,7 @@ export const onCreateUser = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -886,6 +908,7 @@ export const onCreateUser = /* GraphQL */ `
           name
           imageUri
           description
+          searchString
           createdAt
           updatedAt
           albumArtistsId
@@ -946,6 +969,7 @@ export const onUpdateUser = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -983,6 +1007,7 @@ export const onUpdateUser = /* GraphQL */ `
           name
           imageUri
           description
+          searchString
           createdAt
           updatedAt
           albumArtistsId
@@ -1043,6 +1068,7 @@ export const onDeleteUser = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -1080,6 +1106,7 @@ export const onDeleteUser = /* GraphQL */ `
           name
           imageUri
           description
+          searchString
           createdAt
           updatedAt
           albumArtistsId
@@ -1116,6 +1143,7 @@ export const onCreatePlayList = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -1175,6 +1203,7 @@ export const onUpdatePlayList = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -1234,6 +1263,7 @@ export const onDeletePlayList = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -1293,6 +1323,7 @@ export const onCreateCountry = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -1326,6 +1357,7 @@ export const onUpdateCountry = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime
@@ -1359,6 +1391,7 @@ export const onDeleteCountry = /* GraphQL */ `
           title
           songUri
           listened
+          searchString
           lyrics
           averageScore
           ratedTime

@@ -105,8 +105,6 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
           undefined,
           (isFinished) => {
             if (isFinished) {
-              console.log("isfinished:", isFinished)
-              console.log("is remove track: ", isRemoveTrack.value)
               isRemoveTrack.value = true
             }
           }
@@ -142,7 +140,6 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       setPlaying(true)
     }
     if (isRemoveTrack) {
-      console.log("erase procressing")
       eraseTrackAndQueue()
     }
   }, [isRemoveTrack.value])
@@ -166,7 +163,6 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   }, [progress.duration])
 
   const onPlayPausePressed = async () => {
-    // console.log(typeof (await TrackPlayer.getState()))
     const playbackState = await TrackPlayer.getState()
     if (playbackState.toString() === "playing") {
       setPlaying(false)
@@ -204,9 +200,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
 
   useEffect(() => {
     const findTheNextSong = async () => {
-      console.log(progress.position, progress.duration)
       if (progress.duration - progress.position < 2) {
-        // console.log("SONG ENDED.")
         if (isMixed) {
           const queue = await TrackPlayer.getQueue()
           const queueLength = queue.length
@@ -399,7 +393,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
               style={{ width: "99%", height: 5, position: "absolute", top: 0 }}
               minimumValue={0}
               maximumValue={1}
-              value={getProgress()}
+              value={getProgress() || 0}
               minimumTrackTintColor="#fff"
               maximumTrackTintColor="#ccc"
               thumbTintColor="#ffffff"

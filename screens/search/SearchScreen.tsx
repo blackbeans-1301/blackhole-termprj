@@ -22,7 +22,7 @@ export default function SearchScreen() {
   const [songs, setSongs] = useState([])
   const [filteredSongs, setFilteredSongs] = useState([])
 
-  const searchSongs = async () => {
+  const searchSongs = async (value: string) => {
     try {
       const data = await API.graphql(graphqlOperation(listSongsForSearch))
       setFilteredSongs(filterSongs(data.data.listSongs.items))

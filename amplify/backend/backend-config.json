@@ -1,6 +1,6 @@
 {
   "api": {
-    "termprj": {
+    "blackhole": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -9,7 +9,9 @@
           "defaultAuthentication": {
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
+              "apiKeyExpirationDays": 365,
+              "apiKeyExpirationDate": "2023-11-25T04:37:10.814Z",
+              "description": "blackhole API key"
             }
           },
           "additionalAuthenticationProviders": []
@@ -18,7 +20,7 @@
     }
   },
   "auth": {
-    "termprj": {
+    "blackhole": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -27,7 +29,8 @@
         "socialProviders": [],
         "usernameAttributes": [],
         "signupAttributes": [
-          "EMAIL"
+          "EMAIL",
+          "NAME"
         ],
         "passwordProtectionSettings": {
           "passwordPolicyMinLength": 6,
