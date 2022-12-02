@@ -22,7 +22,6 @@ import {
 } from "@expo/vector-icons"
 import { Audio, InterruptionModeIOS } from "expo-av"
 import { Sound } from "expo-av/build/Audio"
-import { Foundation } from "@expo/vector-icons"
 import { AppContext } from "../../AppContext"
 
 import { API, graphqlOperation } from "aws-amplify"
@@ -55,7 +54,12 @@ import TrackPlayer, {
   State,
   useProgress,
 } from "react-native-track-player"
-import { getArtist } from "../../src/graphql/queries"
+import {
+  getArtist,
+  getUser,
+  getLikedSongOfUser,
+} from "../../src/graphql/queries"
+import { updateUser } from "../../src/graphql/mutations"
 
 export type PlayerWidgetProps = {
   song: Song
@@ -65,17 +69,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window")
 const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.3
 
 export default function PlayerWidget(props: PlayerWidgetProps) {
-  const {
-    songId,
-    songsOfAlbum,
-    setSongId,
-    setSongsOfAlbum,
-    hasTrack,
-    setHasTrackState,
-  } = useContext(AppContext)
+  const { userId, hasTrack, setHasTrackState } = useContext(AppContext)
 
   const progress = useProgress()
 
+  const [isLiked, setLikedState] = useState(false)
   const [song, setSong] = useState(null)
   const [sound, setSound] = useState<Sound | null>(null)
   const [isPlaying, setPlaying] = useState<boolean>(true)
@@ -83,8 +81,6 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   const [duration, setDuration] = useState(0)
   const [position, setPosition] = useState<number | null>(null)
   const [fullScreen, setFullScreen] = useState(false)
-  const [currentPosition, setCurrentPosition] = useState(0)
-  const [id, setId] = useState<string | null>("")
   const [isReplay, setReplay] = useState(false)
 
   const translateY = useSharedValue(0)
@@ -147,6 +143,44 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   useEffect(() => {
     isRemoveTrack.value = false
     translateX.value = 0
+
+    const checkIfThisSongIsLikedByCurrentUser = async (songs) => {
+      var songsId = songs.map((song) => {
+        return song.song.id
+      })
+      console.log(songsId)
+
+      try {
+        var currentSong = await TrackPlayer.getTrack(
+          (await TrackPlayer.getCurrentTrack()) || 0
+        )
+        if (currentSong) {
+          songId.includes(currentSong.id)
+            ? setLikedState(true)
+            : setLikedState(false)
+        } else {
+          setLikedState(false)
+        }
+      } catch (e) {
+        console.log("get current song from player widget", e)
+      }
+    }
+
+    const checkUserLikedThisSong = async () => {
+      try {
+        const data = await API.graphql(
+          graphqlOperation(getLikedSongOfUser, { id: userId })
+        )
+        console.log(data.data.getUser.favoriteSongs.items)
+        checkIfThisSongIsLikedByCurrentUser(
+          data.data.getUser.favoriteSongs.items
+        )
+      } catch (e) {
+        console.log("CHECK USER LIKE SONG", e)
+      }
+    }
+
+    checkUserLikedThisSong()
   }, [song])
 
   useEffect(() => {
@@ -196,6 +230,19 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
 
   const onReplayPressed = async () => {
     setReplay(!isReplay)
+  }
+
+  const onLikedSongPressed = async () => {
+    if (isLiked) {
+      try {
+        const response = await API.graphql(
+          graphqlOperation(updateUser, { id: userId })
+        )
+      } catch (e) {
+        console.log("liked song pressed", e)
+      }
+    } else {
+    }
   }
 
   useEffect(() => {
@@ -306,6 +353,15 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
               </TouchableWithoutFeedback>
 
               <View style={styles.controllerRight}>
+                <TouchableOpacity onPress={onLikedSongPressed}>
+                  <FontAwesome
+                    name={"heart-o"}
+                    size={16}
+                    color="white"
+                    style={{ padding: 10 }}
+                  />
+                </TouchableOpacity>
+
                 <TouchableOpacity onPress={onPlayPausePressed}>
                   <FontAwesome
                     name={!isPlaying ? "play" : "pause"}
@@ -329,6 +385,9 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       </PanGestureHandler>
     </GestureHandlerRootView>
   ) : (
+    // FULL SCREEN
+    //
+
     <View style={stylesForFullScreen.wrapper}>
       <LinearGradient
         // Background Linear Gradient

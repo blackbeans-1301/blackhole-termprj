@@ -72,7 +72,7 @@ async function setup() {
 }
 
 function App() {
-  const { hasUser } = useContext(AppContext)
+  const { userId, setUserId } = useContext(AppContext)
   const [user, setUser] = useState(undefined)
 
   const checkUser = async () => {
@@ -82,7 +82,8 @@ function App() {
       })
       setUser(authUser)
     } catch (e) {
-      setUser(null)
+      console.log("check user", e)
+      setUser(undefined)
     }
   }
 
@@ -105,7 +106,7 @@ function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={hasUser === "" ? "SignInScreen" : "AppScreen"}
+          initialRouteName={userId === "" ? "SignInScreen" : "AppScreen"}
         >
           {user ? (
             <Stack.Screen
@@ -154,9 +155,6 @@ function App() {
 
 function AppWithAuthentication() {
   // Auth.signOut()
-  useEffect(() => {
-    setup()
-  }, [])
 
   const isLoadingComplete = useCachedResources()
   const colorScheme = useColorScheme()
@@ -164,11 +162,28 @@ function AppWithAuthentication() {
   const [hasTrack, setHasTrackState] = useState(false)
   const [songId, setSongId] = useState("")
   const [songsOfAlbum, setSongsOfAlbum] = useState<string[]>([])
-  const [hasUser, setUser] = useState("")
+  const [userId, setUserId] = useState("")
   const [isAlbumAdded, setAlbumAddedState] = useState(false)
 
   const onDismissed = useCallback((songId: string) => {
     setSongId("")
+  }, [])
+
+  useEffect(() => {
+    setup()
+    const checkUser = async () => {
+      try {
+        const authUser = await Auth.currentAuthenticatedUser({
+          bypassCache: true,
+        })
+        console.log(authUser.attributes.sub)
+        setUserId(authUser.attributes.sub)
+      } catch (e) {
+        console.log("check user", e)
+      }
+    }
+
+    checkUser()
   }, [])
 
   if (!isLoadingComplete) {
@@ -182,8 +197,8 @@ function AppWithAuthentication() {
             setSongId: (id: string) => setSongId(id),
             songsOfAlbum,
             setSongsOfAlbum: (songsId: string[]) => setSongsOfAlbum(songsId),
-            hasUser,
-            setUser: (userId: string) => setUser(userId),
+            userId,
+            setUserId: (userId: string) => setUserId(userId),
             hasTrack,
             setHasTrackState: (isPlaying: boolean) =>
               setHasTrackState(isPlaying),

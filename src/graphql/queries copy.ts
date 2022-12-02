@@ -23,6 +23,7 @@ export const getSongCategory = /* GraphQL */ `
           songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
           countrySongsId
         }
@@ -98,6 +99,7 @@ export const listAlbumCategories = /* GraphQL */ `
         id
         title
         albums {
+          nextToken
           items {
             id
             name
@@ -106,11 +108,7 @@ export const listAlbumCategories = /* GraphQL */ `
             creator
             imageUri
           }
-          nextToken
         }
-        createdAt
-        updatedAt
-        albumAlbumCategoriesId
       }
       nextToken
     }
@@ -135,6 +133,7 @@ export const getAlbum = /* GraphQL */ `
           lyrics
           averageScore
           ratedTime
+          userFavoriteSongsId
           artist {
             id
             name
@@ -145,7 +144,8 @@ export const getAlbum = /* GraphQL */ `
     }
   }
 `
-export const listAlbums = /* GraphQL */ `
+
+export const listSongsForSearch = /* GraphQL */ `
   query ListAlbums(
     $filter: ModelAlbumFilterInput
     $limit: Int
@@ -182,138 +182,39 @@ export const listAlbums = /* GraphQL */ `
     }
   }
 `
-export const getUserSongsFavorite = /* GraphQL */ `
-  query GetUserSongsFavorite($id: ID!) {
-    getUserSongsFavorite(id: $id) {
-      id
-      song {
-        id
-        imageUri
-        title
-        songUri
-        listened
-        searchString
-        lyrics
-        averageScore
-        ratedTime
-        artist {
-          id
-          name
-          imageUri
-          description
-          searchString
-          createdAt
-          updatedAt
-          albumArtistsId
-          userFavoriteArtistsId
-        }
-        category {
-          id
-          name
-          imageUri
-          createdAt
-          updatedAt
-          albumIncludedSongCategoriesId
-          userFavoriteCategoriesId
-        }
-        country {
-          id
-          name
-          imageUri
-          createdAt
-          updatedAt
-          userFavoriteCountriesId
-        }
-        albums {
-          nextToken
-        }
-        userFavorites {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        songCategorySongsId
-        albumSongsId
-        artistSongsId
-        playListSongsId
-        countrySongsId
-      }
-      user {
-        id
-        avatarUri
-        isChosenCategories
-        isAdmin
-        playLists {
-          nextToken
-        }
-        favoriteCategories {
-          nextToken
-        }
-        favoriteSongs {
-          nextToken
-        }
-        favoriteAlbums {
-          nextToken
-        }
-        favoriteArtists {
-          nextToken
-        }
-        favoriteCountries {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-      songUserFavoritesId
-      userFavoriteSongsId
-    }
-  }
-`
-export const listUserSongsFavorites = /* GraphQL */ `
-  query ListUserSongsFavorites(
-    $filter: ModelUserSongsFavoriteFilterInput
+
+export const listAlbums = /* GraphQL */ `
+  query ListAlbums(
+    $filter: ModelAlbumFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listUserSongsFavorites(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listAlbums(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        song {
-          id
-          imageUri
-          title
-          songUri
-          listened
-          searchString
-          lyrics
-          averageScore
-          ratedTime
-          createdAt
-          updatedAt
-          songCategorySongsId
-          albumSongsId
-          artistSongsId
-          playListSongsId
-          countrySongsId
+        name
+        creator
+        numberOfLikes
+        imageUri
+        artistHeadline
+        albumCategories {
+          nextToken
         }
-        user {
-          id
-          avatarUri
-          isChosenCategories
-          isAdmin
-          createdAt
-          updatedAt
+        songs {
+          nextToken
+        }
+        artists {
+          nextToken
+        }
+        includedSongCategories {
+          nextToken
         }
         createdAt
         updatedAt
-        songUserFavoritesId
-        userFavoriteSongsId
+        albumCategoryAlbumsId
+        songAlbumsId
+        artistAlbumsId
+        userFavoriteAlbumsId
       }
       nextToken
     }
@@ -388,26 +289,18 @@ export const getSong = /* GraphQL */ `
         }
         nextToken
       }
-      userFavorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          songUserFavoritesId
-          userFavoriteSongsId
-        }
-        nextToken
-      }
       createdAt
       updatedAt
       songCategorySongsId
       albumSongsId
       artistSongsId
+      userFavoriteSongsId
       playListSongsId
       countrySongsId
     }
   }
 `
+
 export const listSongs = /* GraphQL */ `
   query ListSongs(
     $filter: ModelSongFilterInput
@@ -456,14 +349,12 @@ export const listSongs = /* GraphQL */ `
         albums {
           nextToken
         }
-        userFavorites {
-          nextToken
-        }
         createdAt
         updatedAt
         songCategorySongsId
         albumSongsId
         artistSongsId
+        userFavoriteSongsId
         playListSongsId
         countrySongsId
       }
@@ -495,6 +386,7 @@ export const getArtist = /* GraphQL */ `
           songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
           countrySongsId
         }
@@ -585,10 +477,22 @@ export const getUser = /* GraphQL */ `
       favoriteSongs {
         items {
           id
+          imageUri
+          title
+          songUri
+          listened
+          searchString
+          lyrics
+          averageScore
+          ratedTime
           createdAt
           updatedAt
-          songUserFavoritesId
+          songCategorySongsId
+          albumSongsId
+          artistSongsId
           userFavoriteSongsId
+          playListSongsId
+          countrySongsId
         }
         nextToken
       }
@@ -643,14 +547,11 @@ export const getUser = /* GraphQL */ `
 export const getLikedSongOfUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
-      id
       favoriteSongs {
         items {
           id
-          song {
-            id
-          }
         }
+        nextToken
       }
     }
   }
@@ -715,6 +616,7 @@ export const getPlayList = /* GraphQL */ `
           songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
           countrySongsId
         }
@@ -804,6 +706,7 @@ export const getCountry = /* GraphQL */ `
           songCategorySongsId
           albumSongsId
           artistSongsId
+          userFavoriteSongsId
           playListSongsId
           countrySongsId
         }

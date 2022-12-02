@@ -28,6 +28,12 @@ type Album @model @auth(rules: [{ allow: public }]) {
   includedSongCategories: [SongCategory] @hasMany
 }
 
+type UserSongsFavorite @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  song: Song @belongsTo
+  user: User @belongsTo
+}
+
 type Song @model @auth(rules: [{ allow: public }]) {
   id: ID!
   imageUri: String!
@@ -43,6 +49,7 @@ type Song @model @auth(rules: [{ allow: public }]) {
   category: SongCategory @belongsTo
   country: Country @belongsTo
   albums: [Album] @hasMany
+  userFavorites: [UserSongsFavorite] @hasMany
 }
 
 type Artist @model @auth(rules: [{ allow: public }]) {
@@ -64,7 +71,7 @@ type User @model @auth(rules: [{ allow: public }]) {
 
   playLists: [PlayList] @hasMany
   favoriteCategories: [SongCategory] @hasMany
-  favoriteSongs: [Song] @hasMany
+  favoriteSongs: [UserSongsFavorite] @hasMany
   favoriteAlbums: [Album] @hasMany
   favoriteArtists: [Artist] @hasMany
   favoriteCountries: [Country] @hasMany

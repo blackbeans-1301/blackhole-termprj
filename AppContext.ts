@@ -17,8 +17,8 @@ const context = {
   setSongsOfAlbum: (songsId: string[]) => {
 
   },
-  hasUser: '',
-  setUser: (userId: string) => {
+  userId: '',
+  setUserId: (userId: string) => {
 
   },
   currentSong: {},
