@@ -36,6 +36,7 @@ import { navigationRef } from "../RootNavigation"
 import PlayListNavigator from "./PlayListNavigator"
 import SettingNavigation from "./SettingNavigator"
 import SettingNavigator from "./SettingNavigator"
+import SearchNavigator from "./SearchNavigator"
 
 export default function Navigation({
   colorScheme,
@@ -115,7 +116,7 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="Search"
-        component={SearchScreen}
+        component={SearchNavigator}
         options={{
           title: "Search",
           tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,

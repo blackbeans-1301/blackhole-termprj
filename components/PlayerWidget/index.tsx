@@ -59,7 +59,11 @@ import {
   getUser,
   getLikedSongOfUser,
 } from "../../src/graphql/queries"
-import { updateUser } from "../../src/graphql/mutations"
+import {
+  createUserSongsFavorite,
+  deleteUserSongsFavorite,
+  updateUser,
+} from "../../src/graphql/mutations"
 
 export type PlayerWidgetProps = {
   song: Song
@@ -69,7 +73,15 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window")
 const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.3
 
 export default function PlayerWidget(props: PlayerWidgetProps) {
-  const { userId, hasTrack, setHasTrackState } = useContext(AppContext)
+  const {
+    userId,
+    hasTrack,
+    setHasTrackState,
+    sleepTimer,
+    setSleepTimer,
+    createdTimer,
+    setCreatedTimer,
+  } = useContext(AppContext)
 
   const progress = useProgress()
 
@@ -82,6 +94,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   const [position, setPosition] = useState<number | null>(null)
   const [fullScreen, setFullScreen] = useState(false)
   const [isReplay, setReplay] = useState(false)
+  const [listOfFavoriteSongs, setListOfFavoriteSongs] = useState([])
 
   const translateY = useSharedValue(0)
   const translateX = useSharedValue(0)
@@ -145,17 +158,17 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
     translateX.value = 0
 
     const checkIfThisSongIsLikedByCurrentUser = async (songs) => {
+      setListOfFavoriteSongs(songs)
       var songsId = songs.map((song) => {
         return song.song.id
       })
-      console.log(songsId)
 
       try {
         var currentSong = await TrackPlayer.getTrack(
           (await TrackPlayer.getCurrentTrack()) || 0
         )
         if (currentSong) {
-          songId.includes(currentSong.id)
+          songsId.includes(currentSong.id)
             ? setLikedState(true)
             : setLikedState(false)
         } else {
@@ -171,7 +184,9 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
         const data = await API.graphql(
           graphqlOperation(getLikedSongOfUser, { id: userId })
         )
+
         console.log(data.data.getUser.favoriteSongs.items)
+
         checkIfThisSongIsLikedByCurrentUser(
           data.data.getUser.favoriteSongs.items
         )
@@ -180,7 +195,8 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       }
     }
 
-    checkUserLikedThisSong()
+    // checkUserLikedThisSong()
+    setPlaying(true)
   }, [song])
 
   useEffect(() => {
@@ -191,6 +207,13 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       ) {
         setSong(await TrackPlayer.getTrack(await TrackPlayer.getCurrentTrack()))
       }
+    }
+
+    const now = Date.now()
+
+    if (createdTimer && sleepTimer && sleepTimer < now) {
+      setCreatedTimer(false)
+      TrackPlayer.pause()
     }
 
     getCurrentTrack()
@@ -234,14 +257,39 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
 
   const onLikedSongPressed = async () => {
     if (isLiked) {
+      var songsId = listOfFavoriteSongs.map((song) => {
+        return song.song.id
+      })
+
+      var index = songsId.indexOf(song.id)
+      var favoriteSongId = listOfFavoriteSongs[index].id.trim()
+
       try {
         const response = await API.graphql(
-          graphqlOperation(updateUser, { id: userId })
+          graphqlOperation(deleteUserSongsFavorite, {
+            input: {
+              id: favoriteSongId,
+            },
+          })
         )
+        setLikedState(false)
       } catch (e) {
         console.log("liked song pressed", e)
       }
     } else {
+      try {
+        const response = await API.graphql(
+          graphqlOperation(createUserSongsFavorite, {
+            input: {
+              songUserFavoritesId: song.id,
+              userFavoriteSongsId: userId,
+            },
+          })
+        )
+        setLikedState(true)
+      } catch (e) {
+        console.log("liked song pressed", e)
+      }
     }
   }
 
@@ -355,7 +403,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
               <View style={styles.controllerRight}>
                 <TouchableOpacity onPress={onLikedSongPressed}>
                   <FontAwesome
-                    name={"heart-o"}
+                    name={isLiked ? "heart" : "heart-o"}
                     size={16}
                     color="white"
                     style={{ padding: 10 }}

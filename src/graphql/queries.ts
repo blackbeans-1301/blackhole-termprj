@@ -552,6 +552,26 @@ export const listArtists = /* GraphQL */ `
     }
   }
 `
+
+export const artistFinder = /* GraphQL */ `
+  query ListArtists(
+    $filter: ModelArtistFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listArtists(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        imageUri
+        description
+        searchString
+      }
+      nextToken
+    }
+  }
+`
+
 export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {

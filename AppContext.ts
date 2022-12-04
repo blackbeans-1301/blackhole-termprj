@@ -24,6 +24,12 @@ const context = {
   currentSong: {},
   setCurrentSong: () => { },
   isAlbumAdded: false,
+  sleepTimer: null,
+  setSleepTimer: (timer: Date) => { },
+  createdTimer: false,
+  setCreatedTimer: (timerState: boolean) => {
+
+  }
 }
 
 export const AppContext = React.createContext(context)

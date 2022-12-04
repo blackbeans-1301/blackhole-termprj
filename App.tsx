@@ -164,6 +164,11 @@ function AppWithAuthentication() {
   const [songsOfAlbum, setSongsOfAlbum] = useState<string[]>([])
   const [userId, setUserId] = useState("")
   const [isAlbumAdded, setAlbumAddedState] = useState(false)
+  const [createdTimer, setCreatedTimer] = useState(false)
+
+  const now = new Date()
+
+  const [sleepTimer, setSleepTimer] = useState(now.setDate(now.getDate() + 1))
 
   const onDismissed = useCallback((songId: string) => {
     setSongId("")
@@ -176,7 +181,6 @@ function AppWithAuthentication() {
         const authUser = await Auth.currentAuthenticatedUser({
           bypassCache: true,
         })
-        console.log(authUser.attributes.sub)
         setUserId(authUser.attributes.sub)
       } catch (e) {
         console.log("check user", e)
@@ -205,6 +209,11 @@ function AppWithAuthentication() {
             isAlbumAdded,
             setAlbumAddedState: (isAlbumAdded: boolean) =>
               setAlbumAddedState(isAlbumAdded),
+            sleepTimer,
+            setSleepTimer: (timer: Date) => setSleepTimer(timer),
+            createdTimer,
+            setCreatedTimer: (createdTimerState: boolean) =>
+              setCreatedTimer(createdTimerState),
           }}
         >
           <Navigation colorScheme={colorScheme} />

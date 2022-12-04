@@ -38,7 +38,7 @@ export const createSongCategory = /* GraphQL */ `
       userFavoriteCategoriesId
     }
   }
-`;
+`
 export const updateSongCategory = /* GraphQL */ `
   mutation UpdateSongCategory(
     $input: UpdateSongCategoryInput!
@@ -75,7 +75,7 @@ export const updateSongCategory = /* GraphQL */ `
       userFavoriteCategoriesId
     }
   }
-`;
+`
 export const deleteSongCategory = /* GraphQL */ `
   mutation DeleteSongCategory(
     $input: DeleteSongCategoryInput!
@@ -112,7 +112,7 @@ export const deleteSongCategory = /* GraphQL */ `
       userFavoriteCategoriesId
     }
   }
-`;
+`
 export const createAlbumCategory = /* GraphQL */ `
   mutation CreateAlbumCategory(
     $input: CreateAlbumCategoryInput!
@@ -143,7 +143,7 @@ export const createAlbumCategory = /* GraphQL */ `
       albumAlbumCategoriesId
     }
   }
-`;
+`
 export const updateAlbumCategory = /* GraphQL */ `
   mutation UpdateAlbumCategory(
     $input: UpdateAlbumCategoryInput!
@@ -174,7 +174,7 @@ export const updateAlbumCategory = /* GraphQL */ `
       albumAlbumCategoriesId
     }
   }
-`;
+`
 export const deleteAlbumCategory = /* GraphQL */ `
   mutation DeleteAlbumCategory(
     $input: DeleteAlbumCategoryInput!
@@ -205,7 +205,7 @@ export const deleteAlbumCategory = /* GraphQL */ `
       albumAlbumCategoriesId
     }
   }
-`;
+`
 export const createAlbum = /* GraphQL */ `
   mutation CreateAlbum(
     $input: CreateAlbumInput!
@@ -283,7 +283,7 @@ export const createAlbum = /* GraphQL */ `
       userFavoriteAlbumsId
     }
   }
-`;
+`
 export const updateAlbum = /* GraphQL */ `
   mutation UpdateAlbum(
     $input: UpdateAlbumInput!
@@ -361,7 +361,7 @@ export const updateAlbum = /* GraphQL */ `
       userFavoriteAlbumsId
     }
   }
-`;
+`
 export const deleteAlbum = /* GraphQL */ `
   mutation DeleteAlbum(
     $input: DeleteAlbumInput!
@@ -439,7 +439,7 @@ export const deleteAlbum = /* GraphQL */ `
       userFavoriteAlbumsId
     }
   }
-`;
+`
 export const createUserSongsFavorite = /* GraphQL */ `
   mutation CreateUserSongsFavorite(
     $input: CreateUserSongsFavoriteInput!
@@ -531,7 +531,7 @@ export const createUserSongsFavorite = /* GraphQL */ `
       userFavoriteSongsId
     }
   }
-`;
+`
 export const updateUserSongsFavorite = /* GraphQL */ `
   mutation UpdateUserSongsFavorite(
     $input: UpdateUserSongsFavoriteInput!
@@ -623,7 +623,7 @@ export const updateUserSongsFavorite = /* GraphQL */ `
       userFavoriteSongsId
     }
   }
-`;
+`
 export const deleteUserSongsFavorite = /* GraphQL */ `
   mutation DeleteUserSongsFavorite(
     $input: DeleteUserSongsFavoriteInput!
@@ -631,91 +631,9 @@ export const deleteUserSongsFavorite = /* GraphQL */ `
   ) {
     deleteUserSongsFavorite(input: $input, condition: $condition) {
       id
-      song {
-        id
-        imageUri
-        title
-        songUri
-        listened
-        searchString
-        lyrics
-        averageScore
-        ratedTime
-        artist {
-          id
-          name
-          imageUri
-          description
-          searchString
-          createdAt
-          updatedAt
-          albumArtistsId
-          userFavoriteArtistsId
-        }
-        category {
-          id
-          name
-          imageUri
-          createdAt
-          updatedAt
-          albumIncludedSongCategoriesId
-          userFavoriteCategoriesId
-        }
-        country {
-          id
-          name
-          imageUri
-          createdAt
-          updatedAt
-          userFavoriteCountriesId
-        }
-        albums {
-          nextToken
-        }
-        userFavorites {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        songCategorySongsId
-        albumSongsId
-        artistSongsId
-        playListSongsId
-        countrySongsId
-      }
-      user {
-        id
-        avatarUri
-        isChosenCategories
-        isAdmin
-        playLists {
-          nextToken
-        }
-        favoriteCategories {
-          nextToken
-        }
-        favoriteSongs {
-          nextToken
-        }
-        favoriteAlbums {
-          nextToken
-        }
-        favoriteArtists {
-          nextToken
-        }
-        favoriteCountries {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-      songUserFavoritesId
-      userFavoriteSongsId
     }
   }
-`;
+`
 export const createSong = /* GraphQL */ `
   mutation CreateSong(
     $input: CreateSongInput!
@@ -807,7 +725,7 @@ export const createSong = /* GraphQL */ `
       countrySongsId
     }
   }
-`;
+`
 export const updateSong = /* GraphQL */ `
   mutation UpdateSong(
     $input: UpdateSongInput!
@@ -899,7 +817,7 @@ export const updateSong = /* GraphQL */ `
       countrySongsId
     }
   }
-`;
+`
 export const deleteSong = /* GraphQL */ `
   mutation DeleteSong(
     $input: DeleteSongInput!
@@ -991,7 +909,7 @@ export const deleteSong = /* GraphQL */ `
       countrySongsId
     }
   }
-`;
+`
 export const createArtist = /* GraphQL */ `
   mutation CreateArtist(
     $input: CreateArtistInput!
@@ -1047,7 +965,7 @@ export const createArtist = /* GraphQL */ `
       userFavoriteArtistsId
     }
   }
-`;
+`
 export const updateArtist = /* GraphQL */ `
   mutation UpdateArtist(
     $input: UpdateArtistInput!
@@ -1103,7 +1021,7 @@ export const updateArtist = /* GraphQL */ `
       userFavoriteArtistsId
     }
   }
-`;
+`
 export const deleteArtist = /* GraphQL */ `
   mutation DeleteArtist(
     $input: DeleteArtistInput!
@@ -1159,7 +1077,7 @@ export const deleteArtist = /* GraphQL */ `
       userFavoriteArtistsId
     }
   }
-`;
+`
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -1249,7 +1167,7 @@ export const createUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const updateUser = /* GraphQL */ `
   mutation UpdateUser(
     $input: UpdateUserInput!
@@ -1339,7 +1257,7 @@ export const updateUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const deleteUser = /* GraphQL */ `
   mutation DeleteUser(
     $input: DeleteUserInput!
@@ -1429,7 +1347,7 @@ export const deleteUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const createPlayList = /* GraphQL */ `
   mutation CreatePlayList(
     $input: CreatePlayListInput!
@@ -1491,7 +1409,7 @@ export const createPlayList = /* GraphQL */ `
       userPlayListsId
     }
   }
-`;
+`
 export const updatePlayList = /* GraphQL */ `
   mutation UpdatePlayList(
     $input: UpdatePlayListInput!
@@ -1553,7 +1471,7 @@ export const updatePlayList = /* GraphQL */ `
       userPlayListsId
     }
   }
-`;
+`
 export const deletePlayList = /* GraphQL */ `
   mutation DeletePlayList(
     $input: DeletePlayListInput!
@@ -1615,7 +1533,7 @@ export const deletePlayList = /* GraphQL */ `
       userPlayListsId
     }
   }
-`;
+`
 export const createCountry = /* GraphQL */ `
   mutation CreateCountry(
     $input: CreateCountryInput!
@@ -1651,7 +1569,7 @@ export const createCountry = /* GraphQL */ `
       userFavoriteCountriesId
     }
   }
-`;
+`
 export const updateCountry = /* GraphQL */ `
   mutation UpdateCountry(
     $input: UpdateCountryInput!
@@ -1687,7 +1605,7 @@ export const updateCountry = /* GraphQL */ `
       userFavoriteCountriesId
     }
   }
-`;
+`
 export const deleteCountry = /* GraphQL */ `
   mutation DeleteCountry(
     $input: DeleteCountryInput!
@@ -1723,4 +1641,4 @@ export const deleteCountry = /* GraphQL */ `
       userFavoriteCountriesId
     }
   }
-`;
+`

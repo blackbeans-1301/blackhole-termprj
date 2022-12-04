@@ -14,7 +14,7 @@ import { Feather } from "@expo/vector-icons"
 import constants from "../../constants"
 
 import { API, graphqlOperation } from "aws-amplify"
-import { listSongsForSearch } from "../../src/graphql/queries"
+import { artistFinder } from "../../src/graphql/queries"
 import SongListItem from "../../components/SongListItem"
 
 export default function SearchScreen() {
@@ -25,19 +25,27 @@ export default function SearchScreen() {
   const searchSongs = async (value: string) => {
     try {
       const data = await API.graphql(
-        graphqlOperation(listSongsForSearch, { filter: { contains: value } })
+        graphqlOperation(artistFinder, { filter: { contains: value } })
       )
-      setFilteredSongs(filterSongs(data.data.listSongs.items))
     } catch (e) {
-      console.log("error searching song", e)
+      console.log("error when searching ARTIST", e)
     }
+
+    // try {
+    //   const data = await API.graphql(
+    //     graphqlOperation(listSongsForSearch, { filter: { contains: value } })
+    //   )
+    //   setFilteredSongs(filterSongs(data.data.listSongs.items))
+    // } catch (e) {
+    //   console.log("error searching song", e)
+    // }
   }
 
-  const filterSongs = (songs) => {
-    return songs.filter((song) =>
-      song.title.toLowerCase().includes(songName.trim().toLowerCase())
-    )
-  }
+  // const filterSongs = (songs) => {
+  //   return songs.filter((song) =>
+  //     song.title.toLowerCase().includes(songName.trim().toLowerCase())
+  //   )
+  // }
 
   return (
     <View style={styles.container}>
@@ -53,10 +61,14 @@ export default function SearchScreen() {
             keyboardType="default"
             returnKeyType="done"
             onChangeText={(value) => {
-              searchSongs(value)
+              setSongName(value)
             }}
           ></TextInput>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              searchSongs(songName)
+            }}
+          >
             <Feather
               style={{ marginRight: 10 }}
               name="search"

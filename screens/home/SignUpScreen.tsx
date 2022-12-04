@@ -48,7 +48,6 @@ export default function SignUpScreen() {
       email === "" ||
       name === ""
     ) {
-      // console.log(true)
       setNotFillUpTheForm(true)
       return
     }
@@ -79,7 +78,6 @@ export default function SignUpScreen() {
         },
       })
 
-      // console.log(response.userSub)
       navigation.navigate("ConfirmEmailScreen", {
         username: userName,
         userId: response.userSub,

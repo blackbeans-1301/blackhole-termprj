@@ -1,5 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native"
+import {
+  Alert,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native"
 import { AntDesign } from "@expo/vector-icons"
 import EditScreenInfo from "../../components/EditScreenInfo"
 import { RootTabScreenProps } from "../../types"
@@ -32,7 +39,6 @@ export default function SettingScreen() {
   const onOptionPressed = useCallback(
     async (option: string) => {
       if (option === "Profile") {
-        console.log("go to profile screen")
         navigation.navigate("ProfileScreen", { userInfo: userInfo })
       }
       if (option === "Sign Out") {
@@ -41,12 +47,15 @@ export default function SettingScreen() {
       }
 
       if (option === "Change Password") {
-        console.log(username)
         navigation.navigate("ChangePasswordScreen", { username: username })
       }
     },
     [name]
   )
+
+  const deleteAccount = () => {
+    Auth.deleteUser()
+  }
 
   useEffect(() => {
     checkUser()
@@ -80,6 +89,52 @@ export default function SettingScreen() {
           ListFooterComponent={() => <View style={{ height: 80 }}></View>}
         ></FlatList>
       </View>
+
+      <TouchableOpacity
+        onPress={() => {
+          Alert.alert(
+            "DELETE Blackhole Account",
+            "This action will delete your account and all of your data. Do you want to continue?",
+            [
+              {
+                text: "Yes",
+                onPress: deleteAccount,
+              },
+              {
+                text: "Cancel",
+                onPress: () => {},
+                style: "cancel",
+              },
+            ],
+            {
+              cancelable: true,
+              onDismiss: () => {},
+            }
+          )
+        }}
+      >
+        <View
+          style={{
+            height: 45,
+            justifyContent: "center",
+            width: "85%",
+            marginHorizontal: 25,
+            borderWidth: 1,
+          }}
+        >
+          <Text
+            style={{
+              color: "red",
+              paddingLeft: 10,
+              fontSize: 16,
+              fontWeight: "700",
+              textAlign: "center",
+            }}
+          >
+            Delete your account
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   )
 }

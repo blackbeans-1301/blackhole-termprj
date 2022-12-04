@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Quicksand",
     fontWeight: "bold",
+    width: 160,
+    overflow: "hidden",
   },
   artist: {
     color: "rgba(255, 255, 255, 0.65)",

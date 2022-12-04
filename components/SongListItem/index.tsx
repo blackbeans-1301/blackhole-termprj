@@ -20,7 +20,6 @@ export default function SongListItem(props: SongListItemProps) {
   return (
     <TouchableWithoutFeedback
       onPress={async () => {
-        console.log("is album added:", isAlbumAdded)
         if (!isAlbumAdded) {
           addAlbumToTrackList()
           if (!hasTrack) {

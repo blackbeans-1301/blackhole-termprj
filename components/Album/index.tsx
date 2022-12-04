@@ -10,9 +10,14 @@ export type AlbumProps = {
 
 const Album = (props: AlbumProps) => {
   const navigation = useNavigation()
+  const album = props.album
 
   const AlbumDetail = () => {
-    navigation.navigate("AlbumScreen", { id: props.album.id })
+    if (album.name === "Best of the week") {
+      navigation.navigate("ChartScreen", { type: album.name })
+    } else {
+      navigation.navigate("AlbumScreen", { id: props.album.id })
+    }
   }
 
   return (
