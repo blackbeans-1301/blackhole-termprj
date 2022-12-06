@@ -10,7 +10,6 @@ export type AlbumProps = {
 
 const MoreArtist = (props) => {
   const data = props.data
-  console.log(data)
   return (
     <TouchableWithoutFeedback onPress={() => {}}>
       <View style={styles.container}>

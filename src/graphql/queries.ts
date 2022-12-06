@@ -572,6 +572,32 @@ export const artistFinder = /* GraphQL */ `
   }
 `
 
+
+export const listUserLikedSong = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      favoriteSongs {
+        items {
+          id
+          song {
+            id
+            imageUri
+            title
+            songUri
+            listened
+            lyrics
+            averageScore
+            ratedTime
+            artist {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {

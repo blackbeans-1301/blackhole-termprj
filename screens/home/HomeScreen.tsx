@@ -61,7 +61,6 @@ export default function HomeScreen() {
   }
 
   const alarmPressed = () => {
-    console.log("Alarm pressed")
     setModalVisible(!modalVisible)
   }
 
@@ -115,7 +114,6 @@ export default function HomeScreen() {
                   var sleepTime = now.setMinutes(now.getMinutes() + timer)
                   setSleepTimer(sleepTime)
                   setCreatedTimer(true)
-                  console.log("Sleep timer setup", sleepTimer)
                 }}
               >
                 <Text style={styles.textStyle}>Ok</Text>

@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
 } from "react-native"
 import { API, Auth, graphqlOperation } from "aws-amplify"
-import { getUserForAuth } from "../../src/graphql/queries"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import constants from "../../constants"
 import { AppContext } from "../../AppContext"
@@ -61,23 +60,7 @@ export default function AuthenticationScreen() {
     navigation.navigate("ForgotPasswordScreen", {})
   }
 
-  const signInToApp = async (userId: string) => {
-    try {
-      const response = await API.graphql(
-        graphqlOperation(getUserForAuth, { id: userId })
-      )
-      setSingingIn(false)
-
-      if (response.data.getUser === null) {
-        setSingIngErrorMessage(
-          "User not found, please check your username and sign in again"
-        )
-      } else {
-        setUser(userId)
-        // navigation.navigate("AppScreen", {})
-      }
-    } catch (e) {}
-  }
+  const signInToApp = async (userId: string) => {}
 
   return (
     <SafeAreaView>

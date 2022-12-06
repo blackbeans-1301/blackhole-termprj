@@ -1,6 +1,13 @@
-import { useRoute } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import React, { useContext, useEffect, useState } from "react"
-import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native"
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native"
 import AlbumHeader from "../../components/AlbumHeader"
 import SongListItem from "../../components/SongListItem"
 import { API, graphqlOperation } from "aws-amplify"
@@ -8,17 +15,16 @@ import { getAlbum, listUserLikedSong } from "../../src/graphql/queries"
 import { LinearGradient } from "expo-linear-gradient"
 import constants from "../../constants"
 import { AppContext } from "../../AppContext"
+import { Ionicons } from "@expo/vector-icons"
 
-export default function PlayListScreen() {
+export default function LikedSongScreen() {
   const [songs, setSongs] = useState([])
+  const [numberOfSongs, setNumberOfSongs] = useState(0)
   const [albumDetails, setAlbumDetails] = useState()
   const { setSongsOfAlbum, songsOfAlbum, userId } = useContext(AppContext)
   const route = useRoute()
 
-  const type = route.params.type
-  const playlistId = route.params.id
-
-  console.log(type)
+  const navigation = useNavigation()
 
   useEffect(() => {
     function listSongsOfAlbum(songs: any[]) {
@@ -54,12 +60,6 @@ export default function PlayListScreen() {
         console.log("error get playlist", e)
       }
     }
-
-    if (type == "liked") {
-      // fetchUserLikedSongs()
-    } else {
-      listSongsOfPlaylist()
-    }
   }, [])
 
   return (
@@ -69,10 +69,28 @@ export default function PlayListScreen() {
         colors={[constants.colors.primaryColor, "transparent"]}
         style={{
           width: "120%",
-          height: "80%",
+          height: "25%",
           position: "absolute",
         }}
       />
+      <View style={styles.likedSongHeader}>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack()
+            }}
+          >
+            <Ionicons name="chevron-back" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Liked Songs</Text>
+          <Text style={styles.songNumber}>{numberOfSongs} song</Text>
+        </View>
+        <View style={styles.headerRight}>
+          <View style={styles.playCircle}>
+            <Ionicons name="play-sharp" size={24} color="black" />
+          </View>
+        </View>
+      </View>
       <FlatList
         data={songs}
         style={{ minHeight: "100%" }}
@@ -80,7 +98,6 @@ export default function PlayListScreen() {
           return <SongListItem song={item} />
         }}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={() => <AlbumHeader album={albumDetails} />}
         ListFooterComponent={() => <View style={{ height: 80 }}></View>}
       />
     </View>
@@ -90,8 +107,34 @@ export default function PlayListScreen() {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 10,
+    paddingTop: 20,
   },
   title: {
+    marginTop: 20,
     color: "white",
+    fontFamily: "Montserrat",
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+  songNumber: {
+    color: "#ccc",
+    marginTop: 5,
+  },
+  likedSongHeader: {
+    justifyContent: "space-between",
+    margin: 25,
+    flexDirection: "row",
+  },
+  headerRight: {
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
+  playCircle: {
+    backgroundColor: "#ffa53d",
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
   },
 })

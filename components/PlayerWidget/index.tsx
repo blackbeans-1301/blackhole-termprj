@@ -185,8 +185,6 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
           graphqlOperation(getLikedSongOfUser, { id: userId })
         )
 
-        console.log(data.data.getUser.favoriteSongs.items)
-
         checkIfThisSongIsLikedByCurrentUser(
           data.data.getUser.favoriteSongs.items
         )

@@ -15,6 +15,7 @@ import { RootTabScreenProps } from "../../types"
 import { API, graphqlOperation } from "aws-amplify"
 import { listPlayLists } from "../../src/graphql/queries"
 import { useNavigation } from "@react-navigation/native"
+import LikedSongItem from "../../components/LikedSongItem"
 
 const PLAY_LIST_DEFAULT_IMAGE =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBwXQR1FMe7YdG9W1du7XLg7nWsR_OY2oe6A&usqp=CAU"
@@ -40,6 +41,26 @@ export default function LibScreen() {
       <View style={styles.header}>
         <Text style={styles.title}> Your Library</Text>
         <AntDesign name="plus" size={28} color="white" />
+      </View>
+      <LikedSongItem />
+      <LikedSongItem
+        data={{
+          name: "Downloaded",
+          imageUrl:
+            "https://cdn.pixabay.com/photo/2016/12/18/13/45/download-1915753_960_720.png",
+          type: "playlist",
+          author: "you",
+        }}
+      />
+
+      <View style={{ alignItems: "center", margin: 20 }}>
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: constants.colors.primaryColor,
+            width: "80%",
+          }}
+        ></View>
       </View>
 
       <FlatList
