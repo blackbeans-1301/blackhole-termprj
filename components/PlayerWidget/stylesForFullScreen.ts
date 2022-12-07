@@ -7,7 +7,7 @@ const stylesForFullScreen = StyleSheet.create({
     width: "100%",
     height: "130%",
     position: "absolute",
-    bottom: -110,
+    bottom: -100,
     display: "flex",
     justifyContent: "center",
     elevation: 1
@@ -97,6 +97,25 @@ const stylesForFullScreen = StyleSheet.create({
     // backgroundColor: "red",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  ratingSongField: {
+    justifyContent: "center",
+
+  },
+  scoreBorder: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
+    width: 30,
+    height: 30,
+    margin: 5,
+    borderWidth: 1,
+    borderColor: constants.colors.primaryColor
+  },
+  listScore: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   }
 })
 

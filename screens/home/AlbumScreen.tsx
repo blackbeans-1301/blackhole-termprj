@@ -29,8 +29,11 @@ export default function AlbumScreen() {
         url: `http://api.mp3.zing.vn/api/streaming/audio/${item.songUri}/320`,
         artwork: item.imageUri,
         title: item.title,
+        averageScore: item.averageScore,
+        ratedTime: item.ratedTime,
       })
     })
+    console.log(listOfSongs[0])
     return listOfSongs
   }
 

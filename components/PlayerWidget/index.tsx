@@ -95,6 +95,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   const [fullScreen, setFullScreen] = useState(false)
   const [isReplay, setReplay] = useState(false)
   const [listOfFavoriteSongs, setListOfFavoriteSongs] = useState([])
+  const [isRated, setRatedState] = useState(false)
 
   const translateY = useSharedValue(0)
   const translateX = useSharedValue(0)
@@ -179,8 +180,11 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       }
     }
 
+    // console.log(userId)
+
     const checkUserLikedThisSong = async () => {
       try {
+        console.log(userId)
         const data = await API.graphql(
           graphqlOperation(getLikedSongOfUser, { id: userId })
         )
@@ -193,8 +197,10 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       }
     }
 
-    // checkUserLikedThisSong()
+    checkUserLikedThisSong()
     setPlaying(true)
+    setRatedState(false)
+    setFullScreen(false)
   }, [song])
 
   useEffect(() => {
@@ -260,7 +266,8 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       })
 
       var index = songsId.indexOf(song.id)
-      var favoriteSongId = listOfFavoriteSongs[index].id.trim()
+      var favoriteSongId = listOfFavoriteSongs[index].id
+      console.log(listOfFavoriteSongs)
 
       try {
         const response = await API.graphql(
@@ -320,6 +327,17 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
     const minutes = Math.floor(progress.duration / 60)
     const sec = Math.floor(progress.duration - minutes * 60)
     return `0${minutes}:${sec / 10 < 1 ? `0${sec}` : sec}`
+  }
+
+  const onRatingSongPressed = async (score: number) => {
+    if (isRated === false) {
+      console.log("Rating song score: ", score)
+      try {
+      } catch (err) {
+        console.log("Error when RATING song", err)
+      }
+      setRatedState(true)
+    }
   }
 
   if (song === null || hasTrack === false || isRemoveTrack.value) {
@@ -571,17 +589,83 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
 
         {/* download song */}
         <View style={stylesForFullScreen.footer}>
-          <MaterialCommunityIcons
-            name="cards-heart-outline"
-            size={24}
-            color="#ccc"
-          />
+          <TouchableOpacity onPress={onLikedSongPressed}>
+            <FontAwesome
+              name={isLiked ? "heart" : "heart-o"}
+              size={16}
+              color="white"
+              style={{ padding: 10 }}
+            />
+          </TouchableOpacity>
           <MaterialCommunityIcons
             name="cloud-download-outline"
             size={24}
             color="#ccc"
           />
         </View>
+
+        {isRated === false && (
+          <View style={stylesForFullScreen.ratingSongField}>
+            <View>
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: "Montserrat",
+                  marginBottom: 5,
+                }}
+              >
+                Rate the song if you like it!
+              </Text>
+            </View>
+            <View style={stylesForFullScreen.listScore}>
+              <TouchableOpacity
+                onPress={() => {
+                  onRatingSongPressed(1)
+                }}
+              >
+                <View style={stylesForFullScreen.scoreBorder}>
+                  <Text style={{ color: "white" }}>1</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onRatingSongPressed(2)
+                }}
+              >
+                <View style={stylesForFullScreen.scoreBorder}>
+                  <Text style={{ color: "white" }}>2</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onRatingSongPressed(3)
+                }}
+              >
+                <View style={stylesForFullScreen.scoreBorder}>
+                  <Text style={{ color: "white" }}>3</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onRatingSongPressed(4)
+                }}
+              >
+                <View style={stylesForFullScreen.scoreBorder}>
+                  <Text style={{ color: "white" }}>4</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onRatingSongPressed(5)
+                }}
+              >
+                <View style={stylesForFullScreen.scoreBorder}>
+                  <Text style={{ color: "white" }}>5</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   )

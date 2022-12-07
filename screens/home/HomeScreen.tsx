@@ -53,7 +53,7 @@ export default function HomeScreen() {
       }
     }
 
-    fetchAlbumCategories()
+    // fetchAlbumCategories()
   }, [])
 
   const getTime = () => {
