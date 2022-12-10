@@ -33,7 +33,6 @@ export default function AlbumScreen() {
         ratedTime: item.ratedTime,
       })
     })
-    console.log(listOfSongs[0])
     return listOfSongs
   }
 
@@ -89,6 +88,7 @@ export default function AlbumScreen() {
             index={songs.indexOf(item)}
             addAlbumToTrackList={addAlbumToTrackList}
             isAlbumAdded={isAlbumAdded}
+            type="albumSongs"
           />
         )}
         keyExtractor={(item) => item.id}

@@ -426,46 +426,8 @@ export const listSongs = /* GraphQL */ `
         averageScore
         ratedTime
         artist {
-          id
           name
-          imageUri
-          description
-          searchString
-          createdAt
-          updatedAt
-          albumArtistsId
-          userFavoriteArtistsId
         }
-        category {
-          id
-          name
-          imageUri
-          createdAt
-          updatedAt
-          albumIncludedSongCategoriesId
-          userFavoriteCategoriesId
-        }
-        country {
-          id
-          name
-          imageUri
-          createdAt
-          updatedAt
-          userFavoriteCountriesId
-        }
-        albums {
-          nextToken
-        }
-        userFavorites {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        songCategorySongsId
-        albumSongsId
-        artistSongsId
-        playListSongsId
-        countrySongsId
       }
       nextToken
     }

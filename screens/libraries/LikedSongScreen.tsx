@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from "@react-navigation/native"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import {
   View,
   Text,
@@ -16,51 +16,56 @@ import { LinearGradient } from "expo-linear-gradient"
 import constants from "../../constants"
 import { AppContext } from "../../AppContext"
 import { Ionicons } from "@expo/vector-icons"
+import TrackPlayer from "react-native-track-player"
 
 export default function LikedSongScreen() {
   const [songs, setSongs] = useState([])
+  const [isAlbumAdded, setAlbumAddedState] = useState(false)
   const [numberOfSongs, setNumberOfSongs] = useState(0)
-  const [albumDetails, setAlbumDetails] = useState()
   const { setSongsOfAlbum, songsOfAlbum, userId } = useContext(AppContext)
   const route = useRoute()
 
   const navigation = useNavigation()
 
-  useEffect(() => {
-    function listSongsOfAlbum(songs: any[]) {
-      let listOfSongs: any[] = []
-      songs.forEach((item) => {
-        listOfSongs.push(item.id)
+  function listSongsForTrack(songs: any[]) {
+    let listOfSongs: any[] = []
+    songs.forEach((item) => {
+      listOfSongs.push({
+        id: item.song.id,
+        artist: item.song.artist,
+        url: `http://api.mp3.zing.vn/api/streaming/audio/${item.song.songUri}/320`,
+        artwork: item.song.imageUri,
+        title: item.song.title,
+        averageScore: item.song.averageScore,
+        ratedTime: item.song.ratedTime,
       })
-      return listOfSongs
-    }
+    })
+    console.log(listOfSongs[0])
+    return listOfSongs
+  }
 
-    async function listSongsOfPlaylist() {
-      try {
-        const data = await API.graphql(
-          graphqlOperation(listSongsOfPlaylist, { id: playlistId })
-        )
-        setAlbumDetails(data.data.getAlbum)
-        setSongs(data.data.getAlbum.songs.items)
-        setSongsOfAlbum(listSongsOfAlbum(data.data.getAlbum.songs.items))
-      } catch (e) {
-        console.log("error get playlist", e)
-      }
-    }
-
+  useEffect(() => {
     async function fetchUserLikedSongs() {
       try {
         const data = await API.graphql(
           graphqlOperation(listUserLikedSong, { id: userId })
         )
-        setAlbumDetails(data.data.getAlbum)
-        setSongs(data.data.getAlbum.songs.items)
-        setSongsOfAlbum(listSongsOfAlbum(data.data.getAlbum.songs.items))
+        setSongs(data.data.getUser.favoriteSongs.items)
+        console.log(data.data.getUser.favoriteSongs.items)
       } catch (e) {
         console.log("error get playlist", e)
       }
     }
+    // fetchUserLikedSongs()
   }, [])
+
+  const addAlbumToTrackList = useCallback(async () => {
+    if (isAlbumAdded) return
+    await TrackPlayer.reset()
+    await TrackPlayer.add(listSongsForTrack(songs))
+    await TrackPlayer.play()
+    setAlbumAddedState(true)
+  }, [songs, isAlbumAdded])
 
   return (
     <View style={styles.container}>
@@ -95,7 +100,15 @@ export default function LikedSongScreen() {
         data={songs}
         style={{ minHeight: "100%" }}
         renderItem={({ item }) => {
-          return <SongListItem song={item} />
+          return (
+            <SongListItem
+              song={item.song}
+              index={songs.indexOf(item)}
+              addAlbumToTrackList={addAlbumToTrackList}
+              isAlbumAdded={isAlbumAdded}
+              type="likedSongs"
+            />
+          )
         }}
         keyExtractor={(item) => item.id}
         ListFooterComponent={() => <View style={{ height: 80 }}></View>}

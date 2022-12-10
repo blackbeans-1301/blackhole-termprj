@@ -11,7 +11,7 @@ const LibraryStack = createNativeStackNavigator()
 
 export default function SearchNavigator() {
   return (
-    <LibraryStack.Navigator initialRouteName="ArtistScreen">
+    <LibraryStack.Navigator initialRouteName="SearchScreen">
       <LibraryStack.Screen
         name="SearchScreen"
         component={SearchScreen}

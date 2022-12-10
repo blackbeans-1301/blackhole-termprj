@@ -196,8 +196,9 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
         console.log("CHECK USER LIKE SONG", e)
       }
     }
-
-    checkUserLikedThisSong()
+    if (song) {
+      checkUserLikedThisSong()
+    }
     setPlaying(true)
     setRatedState(false)
     setFullScreen(false)
@@ -270,7 +271,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       console.log(listOfFavoriteSongs)
 
       try {
-        const response = await API.graphql(
+        await API.graphql(
           graphqlOperation(deleteUserSongsFavorite, {
             input: {
               id: favoriteSongId,
@@ -283,7 +284,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
       }
     } else {
       try {
-        const response = await API.graphql(
+        await API.graphql(
           graphqlOperation(createUserSongsFavorite, {
             input: {
               songUserFavoritesId: song.id,
@@ -313,7 +314,7 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
 
   const getProgress = () => {
     const positionPercent = progress.position / progress.duration
-    if (positionPercent === NaN) return 0
+    if (Number.isNaN(positionPercent)) return 0
     return positionPercent
   }
 

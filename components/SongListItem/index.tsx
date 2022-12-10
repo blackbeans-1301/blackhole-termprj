@@ -10,10 +10,11 @@ export type SongListItemProps = {
   index: number
   addAlbumToTrackList: Function
   isAlbumAdded: boolean
+  type: String
 }
 
 export default function SongListItem(props: SongListItemProps) {
-  const { song, index, addAlbumToTrackList, isAlbumAdded } = props
+  const { song, index, addAlbumToTrackList, isAlbumAdded, type } = props
   const { setSongId, songsOfAlbum, hasTrack, setHasTrackState } =
     useContext(AppContext)
 
