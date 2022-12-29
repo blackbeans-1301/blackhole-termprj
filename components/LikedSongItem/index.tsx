@@ -21,7 +21,10 @@ export default function LikedSongItem(props) {
     <TouchableWithoutFeedback
       onPress={() => {
         if (data != undefined) {
-          navigation.navigate("DownloadedSongsScreen", {})
+          navigation.navigate("DownloadedSongsScreen", {
+            type: "downloaded",
+            id: undefined,
+          })
         } else {
           navigation.navigate("LikedSongScreen", {
             type: "liked",

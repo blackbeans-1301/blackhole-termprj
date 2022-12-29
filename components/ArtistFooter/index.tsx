@@ -65,7 +65,10 @@ export default function ArtistFooter(props) {
   return artistDetail ? (
     <View style={styles.container}>
       <View>
-        <Image style={[styles.image]} source={{ uri: artistImg }}></Image>
+        <Image
+          style={[styles.image]}
+          source={{ uri: artistDetail.imageUri }}
+        ></Image>
         <View
           style={{
             position: "absolute",

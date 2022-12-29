@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Dimensions,
-  animated,
+  ActivityIndicator,
 } from "react-native"
 import styles from "./styles"
 import stylesForFullScreen from "./stylesForFullScreen"
@@ -64,6 +64,7 @@ import {
   deleteUserSongsFavorite,
   updateUser,
 } from "../../src/graphql/mutations"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export type PlayerWidgetProps = {
   song: Song
@@ -96,6 +97,8 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
   const [isReplay, setReplay] = useState(false)
   const [listOfFavoriteSongs, setListOfFavoriteSongs] = useState([])
   const [isRated, setRatedState] = useState(false)
+  const [isDownloaded, setDownloadedState] = useState(false)
+  const [downloading, setDownloadingState] = useState(false)
 
   const translateY = useSharedValue(0)
   const translateX = useSharedValue(0)
@@ -196,9 +199,26 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
         console.log("CHECK USER LIKE SONG", e)
       }
     }
+
+    const checkSongDownloaded = async () => {
+      const data = await AsyncStorage.getItem("downloaded")
+
+      if (data) {
+        const downloadedSongs = JSON.parse(data)
+        for (let i = 0; i < downloadedSongs.length; i++) {
+          if (song.id === downloadedSongs.id) {
+            setDownloadedState(true)
+            break
+          }
+        }
+      }
+    }
+
     if (song) {
       checkUserLikedThisSong()
+      checkSongDownloaded()
     }
+
     setPlaying(true)
     setRatedState(false)
     setFullScreen(false)
@@ -598,11 +618,36 @@ export default function PlayerWidget(props: PlayerWidgetProps) {
               style={{ padding: 10 }}
             />
           </TouchableOpacity>
-          <MaterialCommunityIcons
-            name="cloud-download-outline"
-            size={24}
-            color="#ccc"
-          />
+          {downloading ? (
+            <ActivityIndicator size="small" color="#fff"></ActivityIndicator>
+          ) : (
+            <TouchableOpacity
+              onPress={async () => {
+                if (isDownloaded) return
+                setDownloadingState(true)
+                const data = await AsyncStorage.getItem("downloaded")
+
+                if (data) {
+                  const downloadedSongs = JSON.parse(data)
+                  downloadedSongs.push(song)
+                  AsyncStorage.setItem(
+                    "downloaded",
+                    JSON.stringify(downloadedSongs)
+                  )
+
+                  setTimeout(() => {
+                    setDownloadingState(false)
+                  }, 1400)
+                }
+              }}
+            >
+              <MaterialCommunityIcons
+                name="cloud-download-outline"
+                size={24}
+                color={isDownloaded ? "#4f4f4f" : "#ccc"}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         {isRated === false && (

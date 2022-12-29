@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from "@react-navigation/native"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import {
   View,
   Text,
@@ -16,51 +16,56 @@ import { LinearGradient } from "expo-linear-gradient"
 import constants from "../../constants"
 import { AppContext } from "../../AppContext"
 import { Ionicons } from "@expo/vector-icons"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import TrackPlayer from "react-native-track-player"
 
 export default function DownloadedSongsScreen() {
   const [songs, setSongs] = useState([])
   const [numberOfSongs, setNumberOfSongs] = useState(0)
   const [albumDetails, setAlbumDetails] = useState()
+  const [isPlaylistAdded, setIsPlaylistAdded] = useState(false)
   const { setSongsOfAlbum, songsOfAlbum, userId } = useContext(AppContext)
   const route = useRoute()
 
   const navigation = useNavigation()
 
-  useEffect(() => {
-    function listSongsOfAlbum(songs: any[]) {
-      let listOfSongs: any[] = []
-      songs.forEach((item) => {
-        listOfSongs.push(item.id)
+  function listSongsOfAlbum(songs: any[]) {
+    let listOfSongs: any[] = []
+    songs.forEach((item) => {
+      listOfSongs.push({
+        id: item.id,
+        artist: item.artist,
+        url: `http://api.mp3.zing.vn/api/streaming/audio/${item.songUri}/320`,
+        artwork: item.imageUri,
+        title: item.title,
+        averageScore: item.averageScore,
+        ratedTime: item.ratedTime,
       })
-      return listOfSongs
+    })
+    return listOfSongs
+  }
+
+  useEffect(() => {
+    const getSongs = async () => {
+      const data = await AsyncStorage.getItem("downloaded")
+
+      if (data) {
+        const downloadedSongs = JSON.parse(data)
+        setSongs(downloadedSongs)
+        setSongsOfAlbum(listSongsOfAlbum(downloadedSongs))
+      }
     }
 
-    // async function listSongsOfPlaylist() {
-    //   try {
-    //     const data = await API.graphql(
-    //       graphqlOperation(listSongsOfPlaylist, { id: playlistId })
-    //     )
-    //     setAlbumDetails(data.data.getAlbum)
-    //     setSongs(data.data.getAlbum.songs.items)
-    //     setSongsOfAlbum(listSongsOfAlbum(data.data.getAlbum.songs.items))
-    //   } catch (e) {
-    //     console.log("error get playlist", e)
-    //   }
-    // }
-
-    // async function fetchUserLikedSongs() {
-    //   try {
-    //     const data = await API.graphql(
-    //       graphqlOperation(listUserLikedSong, { id: userId })
-    //     )
-    //     setAlbumDetails(data.data.getAlbum)
-    //     setSongs(data.data.getAlbum.songs.items)
-    //     setSongsOfAlbum(listSongsOfAlbum(data.data.getAlbum.songs.items))
-    //   } catch (e) {
-    //     console.log("error get playlist", e)
-    //   }
-    // }
+    getSongs()
   }, [])
+
+  const addAlbumToTrackList = useCallback(async () => {
+    if (isPlaylistAdded) return
+    await TrackPlayer.reset()
+    await TrackPlayer.add(listSongsOfAlbum(songs))
+    await TrackPlayer.play()
+    setIsPlaylistAdded(true)
+  }, [songs, isPlaylistAdded])
 
   return (
     <View style={styles.container}>
@@ -95,7 +100,15 @@ export default function DownloadedSongsScreen() {
         data={songs}
         style={{ minHeight: "100%" }}
         renderItem={({ item }) => {
-          return <SongListItem song={item} />
+          return (
+            <SongListItem
+              song={item}
+              index={songs.indexOf(item)}
+              addAlbumToTrackList={addAlbumToTrackList}
+              isAlbumAdded={isPlaylistAdded}
+              type="local"
+            />
+          )
         }}
         keyExtractor={(item) => item.id}
         ListFooterComponent={() => <View style={{ height: 80 }}></View>}

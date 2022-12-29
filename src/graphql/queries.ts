@@ -486,6 +486,31 @@ export const getArtist = /* GraphQL */ `
     }
   }
 `
+
+export const getSongsOfArtist = /* GraphQL */ `
+  query GetArtist($id: ID!) {
+    getArtist(id: $id) {
+
+      songs {
+        items {
+          id
+          imageUri
+          title
+          songUri
+          listened
+          lyrics
+          averageScore
+          ratedTime
+          artist {
+            name
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`
+
 export const listArtists = /* GraphQL */ `
   query ListArtists(
     $filter: ModelArtistFilterInput

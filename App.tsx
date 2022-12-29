@@ -25,6 +25,7 @@ import TrackPlayer, {
 import ConfirmEmailScreen from "./screens/home/ConfirmEmailScreen"
 import ForgotPasswordScreen from "./screens/home/ForgotPasswordScreen"
 import ResetPasswordScreen from "./screens/home/ResetPasswordScreen"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 Amplify.configure(config)
 
@@ -42,6 +43,9 @@ const track1 = {
 }
 
 async function setup() {
+  AsyncStorage.setItem("playlists", JSON.stringify([]))
+  AsyncStorage.setItem("downloaded", JSON.stringify([]))
+
   await TrackPlayer.setupPlayer({})
   await TrackPlayer.updateOptions({
     android: {

@@ -21,60 +21,52 @@ import TrackPlayer from "react-native-track-player"
 
 export default function SearchScreen() {
   const [songName, setSongName] = useState("")
-  const [songs, setSongs] = useState([
-    {
-      id: "52349r8yfhdsac",
-      imageUri:
-        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=-1&s=1",
-      title: "Melody",
-      songUri: "ZWBIF86E",
-      listened: null,
-      lyrics: "Melody",
-      averageScore: null,
-      ratedTime: null,
-      artist: {
-        name: "Lauv",
-      },
-    },
-    {
-      id: "52349r8yfhds324dac",
-      imageUri:
-        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=-1&s=1",
-      title: "Melody",
-      songUri: "ZWBIF86E",
-      listened: null,
-      lyrics: "Melody",
-      averageScore: null,
-      ratedTime: null,
-      artist: {
-        name: "Lauv",
-      },
-    },
-    {
-      id: "52349r8yfhdsvs34rac",
-      imageUri:
-        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=-1&s=1",
-      title: "Melody",
-      songUri: "ZWBIF86E",
-      listened: null,
-      lyrics: "Melody",
-      averageScore: null,
-      ratedTime: null,
-      artist: {
-        name: "Lauv",
-      },
-    },
-  ])
-  const [listArtist, setListArtist] = useState([
-    {
-      id: "u839rhjdisauoy3124fsad",
-      name: "Lauv",
-      imageUri:
-        "https://i.scdn.co/image/ab6761610000e5eb5af53f295e6c42529fbd0873",
-      description: "nfujrevcx",
-      searchString: "lauv",
-    },
-  ])
+  // const [songs, setSongs] = useState([
+  //   {
+  //     id: "52349r8yfhdsac",
+  //     imageUri:
+  //       "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=-1&s=1",
+  //     title: "Melody",
+  //     songUri: "ZWBIF86E",
+  //     listened: null,
+  //     lyrics: "Melody",
+  //     averageScore: null,
+  //     ratedTime: null,
+  //     artist: {
+  //       name: "Lauv",
+  //     },
+  //   },
+  //   {
+  //     id: "52349r8yfhds324dac",
+  //     imageUri:
+  //       "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=-1&s=1",
+  //     title: "Melody",
+  //     songUri: "ZWBIF86E",
+  //     listened: null,
+  //     lyrics: "Melody",
+  //     averageScore: null,
+  //     ratedTime: null,
+  //     artist: {
+  //       name: "Lauv",
+  //     },
+  //   },
+  //   {
+  //     id: "52349r8yfhdsvs34rac",
+  //     imageUri:
+  //       "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=-1&s=1",
+  //     title: "Melody",
+  //     songUri: "ZWBIF86E",
+  //     listened: null,
+  //     lyrics: "Melody",
+  //     averageScore: null,
+  //     ratedTime: null,
+  //     artist: {
+  //       name: "Lauv",
+  //     },
+  //   },
+  // ])
+  const [songs, setSongs] = useState()
+  const [listArtist, setListArtist] = useState([])
 
   const [isAlbumAdded, setAlbumAddedState] = useState(false)
 
@@ -157,6 +149,22 @@ export default function SearchScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      {listArtist.length > 0 && (
+        <FlatList
+          style={styles.list}
+          data={listArtist}
+          renderItem={({ item }) => (
+            <SongListItem
+              song={item}
+              index={listArtist.indexOf(item)}
+              addAlbumToTrackList={addAlbumToTrackList}
+              isAlbumAdded={isAlbumAdded}
+              type="artist"
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        ></FlatList>
+      )}
 
       <FlatList
         style={styles.list}

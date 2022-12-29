@@ -6,14 +6,19 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Modal,
+  Alert,
+  Pressable,
+  TextInput,
 } from "react-native"
 import { AntDesign } from "@expo/vector-icons"
 import EditScreenInfo from "../../components/EditScreenInfo"
 import constants from "../../constants"
 import { RootTabScreenProps } from "../../types"
-
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { API, graphqlOperation } from "aws-amplify"
 import { listPlayLists } from "../../src/graphql/queries"
+import { createPlayList } from "../../src/graphql/mutations"
 import { useNavigation } from "@react-navigation/native"
 import LikedSongItem from "../../components/LikedSongItem"
 
@@ -22,25 +27,82 @@ const PLAY_LIST_DEFAULT_IMAGE =
 
 export default function LibScreen() {
   const [playLists, setPlayLists] = useState([])
+  const [modalVisible, setModalVisible] = useState(false)
+  const [playlistName, setPlayListName] = useState("")
 
   useEffect(() => {
     async function getListPlaylists() {
-      try {
-        const data = await API.graphql(graphqlOperation(listPlayLists))
-        setPlayLists(data.data.listPlayLists.items)
-      } catch (e) {
-        console.log("error fetch playlist", e)
+      const storedPlaylists = await AsyncStorage.getItem("playlists")
+
+      if (storedPlaylists) {
+        setPlayLists(JSON.parse(storedPlaylists))
       }
     }
-
     getListPlaylists()
   }, [])
 
+  const createPlaylist = async () => {
+    try {
+      var currentPlaylist = playLists
+      var creatingPlaylist = {
+        id: "id" + Math.random().toString(16).slice(2),
+        title: playlistName,
+        imageUri:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBwXQR1FMe7YdG9W1du7XLg7nWsR_OY2oe6A&usqp=CAU",
+        songs: [],
+        createdBy: "You",
+      }
+      currentPlaylist.push(creatingPlaylist)
+      AsyncStorage.setItem("playlists", JSON.stringify(currentPlaylist))
+    } catch (e) {}
+  }
+
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.")
+          setModalVisible(!modalVisible)
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Create your playlist</Text>
+
+            <View style={styles.timerInput}>
+              <TextInput
+                keyboardType="default"
+                onChangeText={(value) => {
+                  setPlayListName(value)
+                }}
+                style={styles.timerInputNumber}
+              ></TextInput>
+            </View>
+
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {
+                setModalVisible(!modalVisible)
+                createPlaylist()
+              }}
+            >
+              <Text style={styles.textStyle}>Ok</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.header}>
         <Text style={styles.title}> Your Library</Text>
-        <AntDesign name="plus" size={28} color="white" />
+        <TouchableOpacity
+          onPress={() => {
+            setModalVisible(!modalVisible)
+          }}
+        >
+          <AntDesign name="plus" size={28} color="white" />
+        </TouchableOpacity>
       </View>
       <LikedSongItem />
       <LikedSongItem
@@ -64,7 +126,7 @@ export default function LibScreen() {
       </View>
 
       <FlatList
-        style={{ minHeight: "100%" }}
+        style={{}}
         data={playLists}
         renderItem={({ item }) => <PlayListItem playList={item} />}
         keyExtractor={(item) => item.id}
@@ -84,7 +146,11 @@ function PlayListItem(props) {
     playList && (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("PlayListScreen", { id: playList.id })
+          navigation.navigate("PlayListScreen", {
+            id: playList.id,
+            type: "local",
+            playList: playList,
+          })
         }}
       >
         <View
@@ -122,7 +188,7 @@ function PlayListItem(props) {
                   marginTop: 2,
                 }}
               >
-                By Blackbeans
+                By {playList.createdBy}
               </Text>
             </View>
           </View>
@@ -153,5 +219,64 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     borderBottomColor: constants.colors.primaryColor,
     borderBottomWidth: 3,
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    width: 300,
+    height: 200,
+    backgroundColor: "black",
+    borderRadius: 12,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    borderWidth: 1,
+    borderColor: "orange",
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "orange",
+    width: 90,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    textAlign: "center",
+    fontSize: 22,
+    color: "white",
+    fontWeight: "bold",
+  },
+  timerInput: {
+    flexDirection: "row",
+    color: "white",
+    marginVertical: 15,
+    backgroundColor: constants.colors.primaryColor,
+  },
+  timerInputNumber: {
+    flexDirection: "row",
+    color: "white",
+    fontSize: 20,
+    paddingHorizontal: 10,
+    fontWeight: "bold",
   },
 })

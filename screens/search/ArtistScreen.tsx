@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native"
 import AlbumHeader from "../../components/AlbumHeader"
 import SongListItem from "../../components/SongListItem"
 import { API, graphqlOperation } from "aws-amplify"
-import { getAlbum } from "../../src/graphql/queries"
+import { getAlbum, getSongsOfArtist } from "../../src/graphql/queries"
 import { LinearGradient } from "expo-linear-gradient"
 import constants from "../../constants"
 import { AppContext } from "../../AppContext"
@@ -107,6 +107,7 @@ export default function ArtistScreen() {
     useContext(AppContext)
 
   const route = useRoute()
+  const artistData = route.params!.artist
 
   function listSongsOfAlbum(songs: any[]) {
     let listOfSongs: any[] = []
@@ -123,21 +124,19 @@ export default function ArtistScreen() {
   }
 
   useEffect(() => {
-    async function fetchAlbumDetail() {
+    async function fetchSongsOfArtist() {
       try {
         const data = await API.graphql(
-          graphqlOperation(getAlbum, { id: albumId })
+          graphqlOperation(getSongsOfArtist, { id: artistData.id })
         )
-        setAlbumDetails(data.data.getAlbum)
-        setSongs(data.data.getAlbum.songs.items)
+        setAlbumDetails(data.data.getArtist.songs.items)
+        setSongs(data.data.getArtist.songs.items)
       } catch (e) {
         console.log("Album Screen", e)
       }
     }
 
-    setSongs(data.songs)
-
-    // fetchAlbumDetail()
+    fetchSongsOfArtist()
   }, [])
 
   // useEffect(() => {
@@ -174,11 +173,14 @@ export default function ArtistScreen() {
             index={songs.indexOf(item)}
             addAlbumToTrackList={addAlbumToTrackList}
             isAlbumAdded={isAlbumAdded}
+            type="song"
           />
         )}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={() => <ArtistHeader data={data} />}
-        ListFooterComponent={() => <ArtistFooter data={data}></ArtistFooter>}
+        ListHeaderComponent={() => <ArtistHeader data={artistData} />}
+        ListFooterComponent={() => (
+          <ArtistFooter data={artistData}></ArtistFooter>
+        )}
       />
     </View>
   )

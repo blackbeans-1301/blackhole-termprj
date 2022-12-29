@@ -57,4 +57,5 @@ export type Song = {
   title: string
   artist: string
   songUri: string
+  name: string
 }

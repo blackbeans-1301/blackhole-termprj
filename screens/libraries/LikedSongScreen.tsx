@@ -56,7 +56,7 @@ export default function LikedSongScreen() {
         console.log("error get playlist", e)
       }
     }
-    // fetchUserLikedSongs()
+    fetchUserLikedSongs()
   }, [])
 
   const addAlbumToTrackList = useCallback(async () => {
@@ -88,7 +88,7 @@ export default function LikedSongScreen() {
             <Ionicons name="chevron-back" size={24} color="white" />
           </TouchableOpacity>
           <Text style={styles.title}>Liked Songs</Text>
-          <Text style={styles.songNumber}>{numberOfSongs} song</Text>
+          <Text style={styles.songNumber}>{songs.length} song</Text>
         </View>
         <View style={styles.headerRight}>
           <View style={styles.playCircle}>
